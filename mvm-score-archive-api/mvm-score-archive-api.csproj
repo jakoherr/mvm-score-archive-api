@@ -23,4 +23,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\mvm-score-archive-service\mvm-score-archive-service.csproj" />
+  </ItemGroup>
+
 </Project>
