@@ -10,14 +10,14 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["mvm-score-archive-api/mvm-score-archive-api.csproj", "mvm-score-archive-api/"]
-RUN dotnet restore "./mvm-score-archive-api/./mvm-score-archive-api.csproj"
+RUN dotnet restore "mvm-score-archive-api/mvm-score-archive-api.csproj"
 COPY . .
 WORKDIR "/src/mvm-score-archive-api"
-RUN dotnet build "./mvm-score-archive-api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "mvm-score-archive-api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./mvm-score-archive-api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "mvm-score-archive-api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
