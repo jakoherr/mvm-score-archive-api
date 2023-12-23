@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mvm-score-archive-api", "mvm-score-archive-api\mvm-score-archive-api.csproj", "{A38D698C-3B07-4D97-8585-AFCE72998FA7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A38D698C-3B07-4D97-8585-AFCE72998FA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A38D698C-3B07-4D97-8585-AFCE72998FA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A38D698C-3B07-4D97-8585-AFCE72998FA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A38D698C-3B07-4D97-8585-AFCE72998FA7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CF746667-019E-4435-92BB-0F0CCEB5CD3F}
+	EndGlobalSection
+EndGlobal
