@@ -8,6 +8,7 @@
     <RootNamespace>Mvm.Score.Archive.Api</RootNamespace>
     <UserSecretsId>b08c63c1-6c69-4709-b3ef-adb953686ca4</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
