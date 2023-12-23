@@ -10,6 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["mvm-score-archive-api/mvm-score-archive-api.csproj", "mvm-score-archive-api/"]
+COPY ["mvm-score-archive-service/mvm-score-archive-service.csproj", "mvm-score-archive-service/"]
 RUN dotnet restore "mvm-score-archive-api/mvm-score-archive-api.csproj"
 COPY . .
 WORKDIR "/src/mvm-score-archive-api"
