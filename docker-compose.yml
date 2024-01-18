@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  mvm-score-archive-api:
+    image: ${DOCKER_REGISTRY-}mvmscorearchiveapi
+    container_name: demoapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    
