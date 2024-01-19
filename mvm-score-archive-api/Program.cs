@@ -1,30 +1,46 @@
-var builder = WebApplication.CreateBuilder(args);
+using Serilog;
 
-builder.Services.AddCors(options =>
+try
 {
-    options.AddPolicy("AllowAll",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        });
-});
+    var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers();
+    builder.Host.UseSerilog((context, configuration) =>
+        configuration.ReadFrom.Configuration(context.Configuration));
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAll",
+            builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
+    });
 
-var app = builder.Build();
+    builder.Services.AddControllers();
 
-// Configure the HTTP request pipeline.
-app.UseCors("AllowAll");
-app.UseSwagger();
-app.UseSwaggerUI();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
 
-app.MapControllers();
+    var app = builder.Build();
 
-app.Run();
+    app.UseCors("AllowAll");
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
+    app.UseSerilogRequestLogging();
+
+    app.MapControllers();
+
+    app.Logger.LogInformation("Application started");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "App failed to start");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
