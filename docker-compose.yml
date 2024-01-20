@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.8'
 
 services:
   mvm-score-archive-api:
@@ -10,5 +10,26 @@ services:
     ports:
       - 8000:80
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Release
       - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - postgres
+    networks:
+      - archive-network
+  postgres:
+    image: postgres:latest
+    container_name: postgres-database
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - archive-network
+
+networks:
+  archive-network:
+    driver: bridge

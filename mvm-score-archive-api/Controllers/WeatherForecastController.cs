@@ -1,36 +1,28 @@
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Mvm.Score.Archive.Service;
+using Mvm.Score.Archive.Service.Services;
 
 namespace Mvm.Score.Archive.Api.Controllers;
+
 [ApiController]
-[Route("[controller]")]
-[EnableCors("AllowAll")]
+[Produces("application/json", "text/json")]
 public class WeatherForecastController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching",
-    };
-
     private readonly ILogger<WeatherForecastController> logger;
+    private readonly IForcastService forcastService;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(
+        ILogger<WeatherForecastController> logger,
+        IForcastService forcastService)
     {
         this.logger = logger;
+        this.forcastService = forcastService;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    [HttpGet("Forecast")]
+    public IActionResult Get()
     {
-        this.logger.LogError("test");
+        var forecasts = this.forcastService.GetForcast();
 
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)],
-        })
-        .ToArray();
+        return this.Ok(forecasts);
     }
 }
