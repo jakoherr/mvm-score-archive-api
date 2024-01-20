@@ -1,3 +1,5 @@
+using Mvm.Score.Archive.Repository;
+using Mvm.Score.Archive.Service;
 using Serilog;
 
 try
@@ -9,7 +11,8 @@ try
 
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy("AllowAll",
+        options.AddPolicy(
+            "AllowAll",
             builder =>
             {
                 builder.AllowAnyOrigin()
@@ -23,6 +26,8 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
+    builder.Services.AddServices(builder.Configuration);
+
     var app = builder.Build();
 
     app.UseCors("AllowAll");
@@ -32,6 +37,9 @@ try
     app.UseSerilogRequestLogging();
 
     app.MapControllers();
+
+    app.Logger.LogInformation("Running migrations");
+    app.Services.RunMigrations();
 
     app.Logger.LogInformation("Application started");
     app.Run();
