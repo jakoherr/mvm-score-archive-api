@@ -18,4 +18,8 @@
     <ProjectReference Include="..\mvm-score-archive-repository\mvm-score-archive-repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

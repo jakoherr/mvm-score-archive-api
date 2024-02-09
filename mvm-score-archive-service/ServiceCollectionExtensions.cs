@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mvm.Score.Archive.Repository.Context;
-using Mvm.Score.Archive.Service.Services;
 
 namespace Mvm.Score.Archive.Service;
 
@@ -15,7 +14,5 @@ public static class ServiceCollectionExtensions
         {
             services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(connectinString).UseSnakeCaseNamingConvention());
         }
-
-        services.AddTransient<IForcastService, ForcastService>();
     }
 }
