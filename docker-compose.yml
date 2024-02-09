@@ -27,7 +27,7 @@ services:
     volumes:
       - /home/data/pgdata:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - archive-network
 
