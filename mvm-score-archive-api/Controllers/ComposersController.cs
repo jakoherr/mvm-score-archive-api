@@ -15,6 +15,12 @@ public class ComposersController : ApiControllerBase
         this.composerService = composerService;
     }
 
+    /// <summary>
+    /// Adds a new composer to the database.
+    /// </summary>
+    /// <param name="composerDto">The composer.</param>
+    /// <param name="cancellationToken">Canvellation token.</param>
+    /// <returns>The id for the new composer.</returns>
     [HttpPost(ComposerPath)]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -26,10 +26,9 @@ public class ComposerService : IComposerService
         Composer dbComposer = this.mapper.Map<Composer>(composerDto);
 
         this.dbContext.Add(dbComposer);
-
         await this.dbContext.SaveChangesAsync(cancellationToken);
 
-        this.logger.LogInformation("New composer added: {Composer}", dbComposer);
+        this.logger.LogInformation("New composer added: {@Composer}", dbComposer);
 
         return dbComposer.Id;
     }
