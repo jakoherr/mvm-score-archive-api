@@ -25,7 +25,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - /home/data/pgdata:/var/lib/postgresql/data
+      - /home/prod/data/pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
