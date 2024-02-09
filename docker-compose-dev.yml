@@ -15,7 +15,7 @@ services:
     depends_on:
       - postgres
     networks:
-      - archive-network
+      - archive-network-dev
       
   postgres:
     image: postgres:latest
@@ -29,8 +29,8 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - archive-network
+      - archive-network-dev
 
 networks:
-  archive-network:
+  archive-network-dev:
     driver: bridge
