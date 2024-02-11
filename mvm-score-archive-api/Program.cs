@@ -1,3 +1,4 @@
+using Mvm.Score.Archive.Api.Helpers;
 using Mvm.Score.Archive.Repository;
 using Mvm.Score.Archive.Service;
 using Serilog;
@@ -22,9 +23,7 @@ try
     });
 
     builder.Services.AddControllers();
-
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwagger();
 
     builder.Services.AddServices(builder.Configuration);
 
