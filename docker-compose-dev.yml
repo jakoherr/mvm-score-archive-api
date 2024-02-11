@@ -3,19 +3,19 @@ version: '3.8'
 services:
   mvm-score-archive-api:
     image: ${DOCKER_REGISTRY-}mvmscorearchiveapi
-    container_name: archive-api
+    container_name: archive-api-dev
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8000:80
+      - 8001:80
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=dev
       - ASPNETCORE_HTTP_PORTS=80
     depends_on:
       - postgres
     networks:
-      - archive-network
+      - archive-network-dev
       
   postgres:
     image: postgres:latest
@@ -25,12 +25,22 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - /home/data/pgdata_dev:/var/lib/postgresql/data
+      - /home/data/dev/pgdata_dev:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "5400:5432"
     networks:
-      - archive-network
+      - archive-network-dev
+
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9999:8080
+    networks:
+      - archive-network-dev
 
 networks:
-  archive-network:
+  archive-network-dev:
     driver: bridge
