@@ -8,6 +8,8 @@ public class ServiceAutomapperConfiguration : Profile
 {
     public ServiceAutomapperConfiguration()
     {
-        this.CreateMap<ComposerDto, Composer>();
+        this.CreateMap<IncomingComposerDto, Composer>();
+
+        this.CreateMap<Composer, OutgoingComposerDto>();
     }
 }

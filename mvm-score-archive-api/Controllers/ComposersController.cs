@@ -6,7 +6,9 @@ namespace Mvm.Score.Archive.Api.Controllers;
 
 public class ComposersController : ApiControllerBase
 {
-    public const string ComposerPath = "/composer";
+    public const string ComposerPath = "api/composer";
+
+    public const string ComposersPath = "api/composers";
 
     private readonly IComposerService composerService;
 
@@ -24,10 +26,20 @@ public class ComposersController : ApiControllerBase
     [HttpPost(ComposerPath)]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AddComposerAsync([FromBody] ComposerDto composerDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddComposerAsync([FromBody] IncomingComposerDto composerDto, CancellationToken cancellationToken)
     {
-        int id = await this.composerService.AddComposer(cancellationToken, composerDto);
+        int id = await this.composerService.AddComposerAsync(cancellationToken, composerDto);
 
         return this.Created($"{this.HttpContext.Request.GetEncodedUrl()}/{id}", id);
+    }
+
+    [HttpGet(ComposersPath)]
+    [ProducesResponseType(typeof(IReadOnlyList<OutgoingComposerDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetComposersAsync(CancellationToken cancellationToken)
+    {
+        var composers = await this.composerService.GetComposersAsync(cancellationToken);
+
+        return !composers.Any() ? this.NotFound() : this.Ok(composers);
     }
 }
