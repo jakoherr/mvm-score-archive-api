@@ -13,7 +13,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=dev
       - ASPNETCORE_HTTP_PORTS=80
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - archive-network-dev
       
@@ -30,6 +31,9 @@ services:
       - "5400:5432"
     networks:
       - archive-network-dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+
 
 networks:
   archive-network-dev:

@@ -13,7 +13,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Release
       - ASPNETCORE_HTTP_PORTS=80
     depends_on:
-      database:
+      postgres:
         condition: service_healthy
     networks:
       - archive-network
