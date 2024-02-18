@@ -21,7 +21,7 @@ public class ComposersController : ApiControllerBase
     /// Adds a new composer to the database.
     /// </summary>
     /// <param name="composerDto">The composer.</param>
-    /// <param name="cancellationToken">Canvellation token.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The id for the new composer.</returns>
     [HttpPost(ComposerPath)]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
@@ -33,6 +33,11 @@ public class ComposersController : ApiControllerBase
         return this.Created($"{this.HttpContext.Request.GetEncodedUrl()}/{id}", id);
     }
 
+    /// <summary>
+    /// Gets all composers in database.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of all composers.</returns>
     [HttpGet(ComposersPath)]
     [ProducesResponseType(typeof(IReadOnlyList<OutgoingComposerDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -13,7 +13,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Release
       - ASPNETCORE_HTTP_PORTS=80
     depends_on:
-      - postgres
+      database:
+        condition: service_healthy
     networks:
       - archive-network
       
@@ -27,19 +28,11 @@ services:
     volumes:
       - /home/data/prod/pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5401:5432"
     networks:
       - archive-network
-
-  dozzle:
-    container_name: dozzle
-    image: amir20/dozzle:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 9999:8080
-    networks:
-      - archive-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
 
 networks:
   archive-network:

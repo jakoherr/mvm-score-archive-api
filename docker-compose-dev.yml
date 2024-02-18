@@ -31,16 +31,6 @@ services:
     networks:
       - archive-network-dev
 
-  dozzle:
-    container_name: dozzle
-    image: amir20/dozzle:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 9999:8080
-    networks:
-      - archive-network-dev
-
 networks:
   archive-network-dev:
     driver: bridge
