@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mvm.Score.Archive.Repository.Context;
 using Mvm.Score.Archive.Repository.DbEntities;
@@ -21,7 +22,7 @@ public class ComposerService : IComposerService
         this.mapper = mapper;
     }
 
-    public async Task<int> AddComposer(CancellationToken cancellationToken, ComposerDto composerDto)
+    public async Task<int> AddComposerAsync(CancellationToken cancellationToken, IncomingComposerDto composerDto)
     {
         Composer dbComposer = this.mapper.Map<Composer>(composerDto);
 
@@ -31,5 +32,12 @@ public class ComposerService : IComposerService
         this.logger.LogInformation("New composer added: {@Composer}", dbComposer);
 
         return dbComposer.Id;
+    }
+
+    public async Task<IReadOnlyList<OutgoingComposerDto>> GetComposersAsync(CancellationToken cancellationToken)
+    {
+        List<Composer> composers = await this.dbContext.Composers.ToListAsync(cancellationToken);
+
+        return this.mapper.Map<IReadOnlyList<OutgoingComposerDto>>(composers);
     }
 }
