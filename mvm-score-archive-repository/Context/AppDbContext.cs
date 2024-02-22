@@ -18,6 +18,8 @@ public sealed class AppDbContext : DbContext
 
     public DbSet<ScoreSet> ScoresSets => this.Set<ScoreSet>();
 
+    public DbSet<ScoreSheet> ScoreSheets => this.Set<ScoreSheet>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -50,6 +52,11 @@ public sealed class AppDbContext : DbContext
                 .WithMany(e => e.ScoreSets)
                 .HasForeignKey(e => e.GenreId)
                 .IsRequired();
+
+            e.HasMany(e => e.ScoreSheets)
+                .WithMany(e => e.ScoreSets);
         });
+
+        modelBuilder.Entity<ScoreSheet>(e => e.HasKey(e => e.Id));
     }
 }

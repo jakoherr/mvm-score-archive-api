@@ -6,9 +6,9 @@ namespace Mvm.Score.Archive.Api.Controllers;
 
 public class ComposersController : ApiControllerBase
 {
-    public const string ComposerPath = "api/composer";
+    public const string ComposerPath = "composer";
 
-    public const string ComposersPath = "api/composers";
+    public const string ComposersPath = "composers";
 
     private readonly IComposerService composerService;
 

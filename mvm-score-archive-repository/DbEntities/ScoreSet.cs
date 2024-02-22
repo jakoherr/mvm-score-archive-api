@@ -25,4 +25,6 @@ public class ScoreSet
     public string Publisher { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; }
+
+    public ICollection<ScoreSheet> ScoreSheets { get; set; } = null!;
 }
