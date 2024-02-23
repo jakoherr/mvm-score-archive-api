@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8000:80
+      - 127.0.0.1:8000:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Release
       - ASPNETCORE_HTTP_PORTS=80

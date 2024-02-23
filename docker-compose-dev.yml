@@ -13,8 +13,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=dev
       - ASPNETCORE_HTTP_PORTS=80
     depends_on:
-      postgres:
-        condition: service_healthy
+      postgres
     networks:
       - archive-network-dev
       
