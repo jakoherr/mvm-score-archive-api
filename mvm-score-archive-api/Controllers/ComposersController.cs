@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Mvm.Score.Archive.Service.Composers;
+using Mvm.Score.Archive.Service.ComposersService;
 
 namespace Mvm.Score.Archive.Api.Controllers;
 
+[Route("[controller]")]
 public class ComposersController : ApiControllerBase
 {
-    public const string ComposerPath = "api/composer";
-
-    public const string ComposersPath = "api/composers";
-
     private readonly IComposerService composerService;
 
     public ComposersController(IComposerService composerService)
@@ -23,7 +20,7 @@ public class ComposersController : ApiControllerBase
     /// <param name="composerDto">The composer.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The id for the new composer.</returns>
-    [HttpPost(ComposerPath)]
+    [HttpPost]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddComposerAsync([FromBody] IncomingComposerDto composerDto, CancellationToken cancellationToken)
@@ -38,7 +35,7 @@ public class ComposersController : ApiControllerBase
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>List of all composers.</returns>
-    [HttpGet(ComposersPath)]
+    [HttpGet]
     [ProducesResponseType(typeof(IReadOnlyList<OutgoingComposerDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetComposersAsync(CancellationToken cancellationToken)
@@ -47,4 +44,35 @@ public class ComposersController : ApiControllerBase
 
         return !composers.Any() ? this.NotFound() : this.Ok(composers);
     }
+
+    /// <summary>
+    /// Gets a composer provided by id.
+    /// </summary>
+    /// <param name="id">The id of the composer.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The composer</returns>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(OutgoingComposerDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetComposerAsync(int id, CancellationToken cancellationToken)
+    {
+        var composers = await this.composerService.GetComposerAsync(id, cancellationToken);
+
+        return composers is null ? this.NotFound() : this.Ok(composers);
+    }
+
+    /// <summary>
+    /// Deletes a composer by its id.
+    /// </summary>
+    /// <param name="id">The id of the composer</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteComposerById(int id, CancellationToken cancellationToken)
+    {
+        await this.composerService.DeleteComposerByIdAsync(id, cancellationToken);
+
+        return this.NoContent();
+    }
+
 }

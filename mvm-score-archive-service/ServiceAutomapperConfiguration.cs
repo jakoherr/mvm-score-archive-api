@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Mvm.Score.Archive.Repository.DbEntities;
-using Mvm.Score.Archive.Service.Composers;
+using Mvm.Score.Archive.Service.ComposersService;
 
 namespace Mvm.Score.Archive.Service;
 
@@ -8,8 +8,8 @@ public class ServiceAutomapperConfiguration : Profile
 {
     public ServiceAutomapperConfiguration()
     {
-        this.CreateMap<IncomingComposerDto, Composer>();
+        this.CreateMap<IncomingComposerDto, DbComposer>();
 
-        this.CreateMap<Composer, OutgoingComposerDto>();
+        this.CreateMap<DbComposer, OutgoingComposerDto>();
     }
 }

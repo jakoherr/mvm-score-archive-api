@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
   mvm-score-archive-api:
-    image: ${DOCKER_REGISTRY-}mvmscorearchiveapi
     container_name: archive-api
     build:
       context: .
@@ -21,14 +20,13 @@ services:
   postgres:
     image: postgres:latest
     container_name: postgres-database
-    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
       - /home/data/prod/pgdata:/var/lib/postgresql/data
     ports:
-      - "5401:5432"
+      - "5432:5432"
     networks:
       - archive-network
     healthcheck:

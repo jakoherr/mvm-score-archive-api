@@ -1,4 +1,4 @@
-﻿namespace Mvm.Score.Archive.Repository.DbEntities;
+﻿namespace Mvm.Score.Archive.Repository.DbEnums;
 
 public enum Orchestra
 {

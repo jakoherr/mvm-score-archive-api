@@ -1,17 +1,16 @@
 version: '3.8'
 
 services:
-  mvm-score-archive-api:
-    image: ${DOCKER_REGISTRY-}mvmscorearchiveapi
+  webapp:
     container_name: archive-api-dev
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8001:80
+      - 5001:5001
     environment:
       - ASPNETCORE_ENVIRONMENT=dev
-      - ASPNETCORE_HTTP_PORTS=80
+      - ASPNETCORE_HTTP_PORTS=5001
     depends_on:
       postgres:
         condition: service_healthy
@@ -28,7 +27,7 @@ services:
     volumes:
       - /home/data/dev/pgdata_dev:/var/lib/postgresql/data
     ports:
-      - "5400:5432"
+      - "5432:5432"
     networks:
       - archive-network-dev
     healthcheck:

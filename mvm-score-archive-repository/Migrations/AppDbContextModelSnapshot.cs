@@ -20,9 +20,35 @@ namespace Mvm.Score.Archive.Repository.Migrations
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "orchestra", new[] { "unkown", "vorstufe", "juka", "staka" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.Composer", b =>
+            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbArranger", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("last_name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_arranges");
+
+                    b.ToTable("arranges", (string)null);
+                });
+
+            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbComposer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,7 +73,7 @@ namespace Mvm.Score.Archive.Repository.Migrations
                     b.ToTable("composers", (string)null);
                 });
 
-            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.Genre", b =>
+            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbGenre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,11 +81,6 @@ namespace Mvm.Score.Archive.Repository.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Extention")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("extention");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -72,7 +93,7 @@ namespace Mvm.Score.Archive.Repository.Migrations
                     b.ToTable("genres", (string)null);
                 });
 
-            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.ScoreSet", b =>
+            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbScore", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,9 +102,9 @@ namespace Mvm.Score.Archive.Repository.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ArrangementId")
+                    b.Property<int?>("ArrangerId")
                         .HasColumnType("integer")
-                        .HasColumnName("arrangement_id");
+                        .HasColumnName("arranger_id");
 
                     b.Property<int>("ComposerId")
                         .HasColumnType("integer")
@@ -121,8 +142,8 @@ namespace Mvm.Score.Archive.Repository.Migrations
                     b.HasKey("Id")
                         .HasName("pk_scores_sets");
 
-                    b.HasIndex("ArrangementId")
-                        .HasDatabaseName("ix_scores_sets_arrangement_id");
+                    b.HasIndex("ArrangerId")
+                        .HasDatabaseName("ix_scores_sets_arranger_id");
 
                     b.HasIndex("ComposerId")
                         .HasDatabaseName("ix_scores_sets_composer_id");
@@ -133,44 +154,47 @@ namespace Mvm.Score.Archive.Repository.Migrations
                     b.ToTable("scores_sets", (string)null);
                 });
 
-            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.ScoreSet", b =>
+            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbScore", b =>
                 {
-                    b.HasOne("Mvm.Score.Archive.Repository.DbEntities.Composer", "Arrangement")
-                        .WithMany("ArrangedScores")
-                        .HasForeignKey("ArrangementId")
-                        .HasConstraintName("fk_scores_sets_composers_arrangement_id");
+                    b.HasOne("Mvm.Score.Archive.Repository.DbEntities.DbArranger", "Arranger")
+                        .WithMany("Scores")
+                        .HasForeignKey("ArrangerId")
+                        .HasConstraintName("fk_scores_sets_arranges_arranger_id");
 
-                    b.HasOne("Mvm.Score.Archive.Repository.DbEntities.Composer", "Composer")
-                        .WithMany("ComposedScores")
+                    b.HasOne("Mvm.Score.Archive.Repository.DbEntities.DbComposer", "Composer")
+                        .WithMany("Scores")
                         .HasForeignKey("ComposerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_scores_sets_composers_composer_id");
 
-                    b.HasOne("Mvm.Score.Archive.Repository.DbEntities.Genre", "Genre")
-                        .WithMany("ScoreSets")
+                    b.HasOne("Mvm.Score.Archive.Repository.DbEntities.DbGenre", "Genre")
+                        .WithMany("Score")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_scores_sets_genres_genre_id");
 
-                    b.Navigation("Arrangement");
+                    b.Navigation("Arranger");
 
                     b.Navigation("Composer");
 
                     b.Navigation("Genre");
                 });
 
-            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.Composer", b =>
+            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbArranger", b =>
                 {
-                    b.Navigation("ArrangedScores");
-
-                    b.Navigation("ComposedScores");
+                    b.Navigation("Scores");
                 });
 
-            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.Genre", b =>
+            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbComposer", b =>
                 {
-                    b.Navigation("ScoreSets");
+                    b.Navigation("Scores");
+                });
+
+            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbGenre", b =>
+                {
+                    b.Navigation("Score");
                 });
 #pragma warning restore 612, 618
         }

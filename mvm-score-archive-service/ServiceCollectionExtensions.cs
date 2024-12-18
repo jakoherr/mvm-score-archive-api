@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mvm.Score.Archive.Repository.Context;
-using Mvm.Score.Archive.Service.Composers;
+using Mvm.Score.Archive.Service.ComposersService;
 
 namespace Mvm.Score.Archive.Service;
 

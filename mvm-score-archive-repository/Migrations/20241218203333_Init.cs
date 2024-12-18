@@ -7,19 +7,49 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mvm.Score.Archive.Repository.Migrations
 {
     /// <inheritdoc />
-    public partial class AddScoreSet : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:Enum:orchestra", "unkown,vorstufe,juka,staka");
+
+            migrationBuilder.CreateTable(
+                name: "arranges",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    first_name = table.Column<string>(type: "text", nullable: false),
+                    last_name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_arranges", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "composers",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    first_name = table.Column<string>(type: "text", nullable: false),
+                    last_name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_composers", x => x.id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "genres",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    extention = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,19 +65,19 @@ namespace Mvm.Score.Archive.Repository.Migrations
                     title = table.Column<string>(type: "text", nullable: false),
                     subtitle = table.Column<string>(type: "text", nullable: false),
                     composer_id = table.Column<int>(type: "integer", nullable: false),
-                    arrangement_id = table.Column<int>(type: "integer", nullable: true),
+                    arranger_id = table.Column<int>(type: "integer", nullable: true),
                     genre_id = table.Column<int>(type: "integer", nullable: false),
                     orchestra = table.Column<int>(type: "integer", nullable: false),
                     publisher = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_scores_sets", x => x.id);
                     table.ForeignKey(
-                        name: "fk_scores_sets_composers_arrangement_id",
-                        column: x => x.arrangement_id,
-                        principalTable: "composers",
+                        name: "fk_scores_sets_arranges_arranger_id",
+                        column: x => x.arranger_id,
+                        principalTable: "arranges",
                         principalColumn: "id");
                     table.ForeignKey(
                         name: "fk_scores_sets_composers_composer_id",
@@ -64,9 +94,9 @@ namespace Mvm.Score.Archive.Repository.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_scores_sets_arrangement_id",
+                name: "ix_scores_sets_arranger_id",
                 table: "scores_sets",
-                column: "arrangement_id");
+                column: "arranger_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_scores_sets_composer_id",
@@ -84,6 +114,12 @@ namespace Mvm.Score.Archive.Repository.Migrations
         {
             migrationBuilder.DropTable(
                 name: "scores_sets");
+
+            migrationBuilder.DropTable(
+                name: "arranges");
+
+            migrationBuilder.DropTable(
+                name: "composers");
 
             migrationBuilder.DropTable(
                 name: "genres");

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mvm.Score.Archive.Repository.DbEntities;
+using Mvm.Score.Archive.Repository.DbEnums;
 
 namespace Mvm.Score.Archive.Repository.Context;
 
@@ -12,44 +13,49 @@ public sealed class AppDbContext : DbContext
     {
     }
 
-    public DbSet<Composer> Composers => this.Set<Composer>();
+    public DbSet<DbComposer> Composers => this.Set<DbComposer>();
 
-    public DbSet<Genre> Genres => this.Set<Genre>();
+    public DbSet<DbGenre> Genres => this.Set<DbGenre>();
 
-    public DbSet<ScoreSet> ScoresSets => this.Set<ScoreSet>();
+    public DbSet<DbScore> ScoresSets => this.Set<DbScore>();
+
+    public DbSet<DbArranger> Arranges => this.Set<DbArranger>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Composer>(e =>
+        modelBuilder.Entity<DbComposer>(e =>
         {
             e.HasKey(e => e.Id);
         });
 
-        modelBuilder.Entity<Genre>(e =>
+        modelBuilder.Entity<DbGenre>(e =>
         {
             e.HasKey(e => e.Id);
         });
 
-        modelBuilder.Entity<ScoreSet>(e =>
+        modelBuilder.Entity<DbScore>(e =>
         {
             e.HasKey(e => e.Id);
             e.Property(e => e.CreatedAt).HasDefaultValueSql(PostgresNow);
             e.HasOne(e => e.Composer)
-                .WithMany(e => e.ComposedScores)
+                .WithMany(e => e.Scores)
                 .HasForeignKey(e => e.ComposerId)
                 .IsRequired();
 
-            e.HasOne(e => e.Arrangement)
-                .WithMany(e => e.ArrangedScores)
-                .HasForeignKey(e => e.ArrangementId)
+            e.HasOne(e => e.Arranger)
+                .WithMany(e => e.Scores)
+                .HasForeignKey(e => e.ArrangerId)
                 .IsRequired(false);
 
             e.HasOne(e => e.Genre)
-                .WithMany(e => e.ScoreSets)
+                .WithMany(e => e.Score)
                 .HasForeignKey(e => e.GenreId)
                 .IsRequired();
         });
+
+        // enums
+        modelBuilder.HasPostgresEnum<Orchestra>(null, "orchestra");
     }
 }
