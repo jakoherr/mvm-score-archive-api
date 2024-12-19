@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Mvm.Score.Archive.Repository.DbEntities;
-using Mvm.Score.Archive.Service.ComposersService;
+using Mvm.Score.Archive.Service.Composer;
 
 namespace Mvm.Score.Archive.Service;
 

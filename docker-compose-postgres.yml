@@ -10,4 +10,4 @@ services:
     volumes:
       - /home/data/development/pgdata_dev:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5555:5432"

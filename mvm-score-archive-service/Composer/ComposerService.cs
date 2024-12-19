@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Mvm.Score.Archive.Repository.Context;
 using Mvm.Score.Archive.Repository.DbEntities;
 
-namespace Mvm.Score.Archive.Service.ComposersService;
+namespace Mvm.Score.Archive.Service.Composer;
 
 public class ComposerService : IComposerService
 {

@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
-  webapp:
+  api:
     container_name: archive-api-dev
+    image: ${DOCKER_REGISTRY-}mvmscorearchiveapi
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,13 +10,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=dev
       - ASPNETCORE_HTTP_PORTS=5001
-    depends_on:
-      postgres:
-        condition: service_healthy
+    # depends_on:
+    #   database:
+    #     condition: service_healthy
     networks:
       - archive-network-dev
       
-  postgres:
+  database:
     image: postgres:latest
     container_name: postgres-dev
     restart: always
@@ -33,6 +32,15 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
 
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8080:8080
+    networks:
+      - archive-network-dev
 
 networks:
   archive-network-dev:

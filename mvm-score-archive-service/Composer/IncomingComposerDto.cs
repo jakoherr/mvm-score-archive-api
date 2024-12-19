@@ -1,4 +1,4 @@
-﻿namespace Mvm.Score.Archive.Service.ComposersService;
+﻿namespace Mvm.Score.Archive.Service.Composer;
 
 public record IncomingComposerDto(
     string FirstName,
