@@ -30,6 +30,7 @@ try
     builder.Services.AddSwagger();
 
     builder.Services.AddServices(builder.Configuration);
+    builder.Services.AddProblemDetails();
 
     var app = builder.Build();
 
