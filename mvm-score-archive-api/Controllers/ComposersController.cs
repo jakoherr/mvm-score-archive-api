@@ -4,7 +4,6 @@ using Mvm.Score.Archive.Service.Composer;
 
 namespace Mvm.Score.Archive.Api.Controllers;
 
-[Route("[controller]")]
 public class ComposersController : ApiControllerBase
 {
     private readonly IComposerService composerService;
@@ -25,7 +24,7 @@ public class ComposersController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddComposerAsync([FromBody] IncomingComposerDto composerDto, CancellationToken cancellationToken)
     {
-        int id = await this.composerService.AddComposerAsync(cancellationToken, composerDto);
+        int id = await this.composerService.AddComposerAsync(composerDto, cancellationToken);
 
         return this.Created($"{this.HttpContext.Request.GetEncodedUrl()}/{id}", id);
     }
@@ -56,7 +55,7 @@ public class ComposersController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetComposerAsync(int id, CancellationToken cancellationToken)
     {
-        var composers = await this.composerService.GetComposerAsync(id, cancellationToken);
+        var composers = await this.composerService.GetComposerByIdAsync(id, cancellationToken);
 
         return composers is null ? this.NotFound() : this.Ok(composers);
     }

@@ -2,11 +2,11 @@
 
 public interface IComposerService
 {
-    Task<int> AddComposerAsync(CancellationToken cancellationToken, IncomingComposerDto composerDto);
+    Task<int> AddComposerAsync(IncomingComposerDto composerDto, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<OutgoingComposerDto>> GetComposersAsync(CancellationToken cancellationToken);
 
-    Task<OutgoingComposerDto?> GetComposerAsync(int id, CancellationToken cancellationToken);
+    Task<OutgoingComposerDto?> GetComposerByIdAsync(int id, CancellationToken cancellationToken);
 
     Task DeleteComposerByIdAsync(int id, CancellationToken cancellationToken);
 }

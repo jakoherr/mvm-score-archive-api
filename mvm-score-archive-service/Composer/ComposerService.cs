@@ -22,7 +22,7 @@ public class ComposerService : IComposerService
         this.mapper = mapper;
     }
 
-    public async Task<int> AddComposerAsync(CancellationToken cancellationToken, IncomingComposerDto composerDto)
+    public async Task<int> AddComposerAsync(IncomingComposerDto composerDto, CancellationToken cancellationToken)
     {
         DbComposer dbComposer = this.mapper.Map<DbComposer>(composerDto);
 
@@ -39,9 +39,11 @@ public class ComposerService : IComposerService
         await this.dbContext.Composers
             .Where(c => c.Id == id)
             .ExecuteDeleteAsync(cancellationToken);
+
+        this.logger.LogInformation("The composer with id {Id} has been deleted.", id);
     }
 
-    public async Task<OutgoingComposerDto?> GetComposerAsync(int id, CancellationToken cancellationToken)
+    public async Task<OutgoingComposerDto?> GetComposerByIdAsync(int id, CancellationToken cancellationToken)
     {
         DbComposer? dbComposer = await this.dbContext.Composers
             .FirstOrDefaultAsync(composer => composer.Id == id, cancellationToken);

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -22,7 +21,7 @@ namespace Mvm.Score.Archive.Repository.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     first_name = table.Column<string>(type: "text", nullable: false),
-                    last_name = table.Column<string>(type: "text", nullable: false)
+                    last_name = table.Column<string>(type: "text", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -36,7 +35,7 @@ namespace Mvm.Score.Archive.Repository.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     first_name = table.Column<string>(type: "text", nullable: false),
-                    last_name = table.Column<string>(type: "text", nullable: false)
+                    last_name = table.Column<string>(type: "text", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -49,7 +48,7 @@ namespace Mvm.Score.Archive.Repository.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false)
+                    name = table.Column<string>(type: "text", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -69,7 +68,7 @@ namespace Mvm.Score.Archive.Repository.Migrations
                     genre_id = table.Column<int>(type: "integer", nullable: false),
                     orchestra = table.Column<int>(type: "integer", nullable: false),
                     publisher = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
                 },
                 constraints: table =>
                 {
