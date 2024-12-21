@@ -13,6 +13,8 @@ services:
     # depends_on:
     #   database:
     #     condition: service_healthy
+    volumes:
+      - app_data:/app/data
     networks:
       - archive-network-dev
       
@@ -45,3 +47,6 @@ services:
 networks:
   archive-network-dev:
     driver: bridge
+
+volumes:
+  app_data:

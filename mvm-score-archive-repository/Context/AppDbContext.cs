@@ -17,7 +17,7 @@ public sealed class AppDbContext : DbContext
 
     public DbSet<DbGenre> Genres => this.Set<DbGenre>();
 
-    public DbSet<DbScore> ScoresSets => this.Set<DbScore>();
+    public DbSet<DbScore> Scores => this.Set<DbScore>();
 
     public DbSet<DbArranger> Arranges => this.Set<DbArranger>();
 
@@ -39,6 +39,7 @@ public sealed class AppDbContext : DbContext
         {
             e.HasKey(e => e.Id);
             e.Property(e => e.CreatedAt).HasDefaultValueSql(PostgresNow);
+
             e.HasOne(e => e.Composer)
                 .WithMany(e => e.Scores)
                 .HasForeignKey(e => e.ComposerId)
@@ -48,11 +49,6 @@ public sealed class AppDbContext : DbContext
                 .WithMany(e => e.Scores)
                 .HasForeignKey(e => e.ArrangerId)
                 .IsRequired(false);
-
-            e.HasOne(e => e.Genre)
-                .WithMany(e => e.Score)
-                .HasForeignKey(e => e.GenreId)
-                .IsRequired();
         });
 
         // enums

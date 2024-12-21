@@ -26,6 +26,8 @@ try
             });
     });
 
+    builder.Services.AddFileSettingsConfiguration(builder.Configuration);
+
     builder.Services.AddControllers();
     builder.Services.AddSwagger();
 

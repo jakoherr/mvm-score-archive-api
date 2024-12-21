@@ -18,13 +18,13 @@ public class DbScore
 
     public DbArranger? Arranger { get; set; }
 
-    public int GenreId { get; set; }
-
-    required public DbGenre Genre { get; set; }
+    public string Genre { get; set; } = string.Empty;
 
     public Orchestra Orchestra { get; set; }
 
     public string Publisher { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; }
+
+    public string FilePath { get; set; } = string.Empty;
 }

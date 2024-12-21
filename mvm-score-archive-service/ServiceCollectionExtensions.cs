@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Mvm.Score.Archive.Repository.Context;
 using Mvm.Score.Archive.Service.Arranger;
 using Mvm.Score.Archive.Service.Composer;
+using Mvm.Score.Archive.Service.Files;
+using Mvm.Score.Archive.Service.Score;
 
 namespace Mvm.Score.Archive.Service;
 
@@ -24,5 +26,7 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<IComposerService, ComposerService>();
         services.AddTransient<IArrangerService, ArrangerService>();
+        services.AddTransient<IFileService, FileService>();
+        services.AddTransient<IScoreService, ScoreService>();
     }
 }

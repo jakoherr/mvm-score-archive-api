@@ -116,9 +116,15 @@ namespace Mvm.Score.Archive.Repository.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<int>("GenreId")
-                        .HasColumnType("integer")
-                        .HasColumnName("genre_id");
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("file_path");
+
+                    b.Property<string>("Genre")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("genre");
 
                     b.Property<int>("Orchestra")
                         .HasColumnType("integer")
@@ -140,18 +146,15 @@ namespace Mvm.Score.Archive.Repository.Migrations
                         .HasColumnName("title");
 
                     b.HasKey("Id")
-                        .HasName("pk_scores_sets");
+                        .HasName("pk_scores");
 
                     b.HasIndex("ArrangerId")
-                        .HasDatabaseName("ix_scores_sets_arranger_id");
+                        .HasDatabaseName("ix_scores_arranger_id");
 
                     b.HasIndex("ComposerId")
-                        .HasDatabaseName("ix_scores_sets_composer_id");
+                        .HasDatabaseName("ix_scores_composer_id");
 
-                    b.HasIndex("GenreId")
-                        .HasDatabaseName("ix_scores_sets_genre_id");
-
-                    b.ToTable("scores_sets", (string)null);
+                    b.ToTable("scores", (string)null);
                 });
 
             modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbScore", b =>
@@ -159,27 +162,18 @@ namespace Mvm.Score.Archive.Repository.Migrations
                     b.HasOne("Mvm.Score.Archive.Repository.DbEntities.DbArranger", "Arranger")
                         .WithMany("Scores")
                         .HasForeignKey("ArrangerId")
-                        .HasConstraintName("fk_scores_sets_arranges_arranger_id");
+                        .HasConstraintName("fk_scores_arranges_arranger_id");
 
                     b.HasOne("Mvm.Score.Archive.Repository.DbEntities.DbComposer", "Composer")
                         .WithMany("Scores")
                         .HasForeignKey("ComposerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_scores_sets_composers_composer_id");
-
-                    b.HasOne("Mvm.Score.Archive.Repository.DbEntities.DbGenre", "Genre")
-                        .WithMany("Score")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_scores_sets_genres_genre_id");
+                        .HasConstraintName("fk_scores_composers_composer_id");
 
                     b.Navigation("Arranger");
 
                     b.Navigation("Composer");
-
-                    b.Navigation("Genre");
                 });
 
             modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbArranger", b =>
@@ -190,11 +184,6 @@ namespace Mvm.Score.Archive.Repository.Migrations
             modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbComposer", b =>
                 {
                     b.Navigation("Scores");
-                });
-
-            modelBuilder.Entity("Mvm.Score.Archive.Repository.DbEntities.DbGenre", b =>
-                {
-                    b.Navigation("Score");
                 });
 #pragma warning restore 612, 618
         }
