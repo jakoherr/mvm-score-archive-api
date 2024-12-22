@@ -19,5 +19,7 @@ public class ServiceAutomapperConfiguration : Profile
         this.CreateMap<DbArranger, OutgoingArrangerDto>();
 
         this.CreateMap<IncomingScoreDto, DbScore>();
+
+        this.CreateMap<DbScore, OutgoingScoreDto>();
     }
 }

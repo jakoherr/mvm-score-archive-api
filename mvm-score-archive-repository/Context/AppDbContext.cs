@@ -21,6 +21,8 @@ public sealed class AppDbContext : DbContext
 
     public DbSet<DbArranger> Arranges => this.Set<DbArranger>();
 
+    public DbSet<DbPart> Parts => this.Set<DbPart>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -49,9 +51,20 @@ public sealed class AppDbContext : DbContext
                 .WithMany(e => e.Scores)
                 .HasForeignKey(e => e.ArrangerId)
                 .IsRequired(false);
+
+            e.HasMany(e => e.Parts)
+                .WithMany();
+        });
+
+        modelBuilder.Entity<DbPart>(e =>
+        {
+            e.HasKey(e => e.Id);
+            e.Ignore(e => e.FileName);
         });
 
         // enums
         modelBuilder.HasPostgresEnum<Orchestra>(null, "orchestra");
+        modelBuilder.HasPostgresEnum<Clef>(null, "clef");
+        modelBuilder.HasPostgresEnum<Tunings>(null, "tunings");
     }
 }

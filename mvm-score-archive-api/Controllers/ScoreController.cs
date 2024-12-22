@@ -7,6 +7,7 @@ namespace Mvm.Score.Archive.Api.Controllers;
 public class ScoreController : ApiControllerBase
 {
     private readonly IScoreService scoreService;
+    private const string UploadFilePath = "/upload";
 
     public ScoreController(
         IScoreService scoreService)
@@ -14,11 +15,50 @@ public class ScoreController : ApiControllerBase
         this.scoreService = scoreService;
     }
 
+    /// <summary>
+    /// Adds a score to the database and creates the folder.
+    /// </summary>
+    /// <param name="scoreDto">The score dto.</param>
+    /// <param name="cancellationToken">Cancellation Token.</param>
+    /// <returns>The id of the score.</returns>
     [HttpPost]
     public async Task<IActionResult> AddScoreAsync([FromBody] IncomingScoreDto scoreDto, CancellationToken cancellationToken)
     {
         int id = await this.scoreService.AddScoreAsync(scoreDto, cancellationToken);
 
         return this.Created($"{this.HttpContext.Request.GetEncodedUrl()}/{id}", id);
+    }
+
+    /// <summary>
+    /// Returns all Scores in the database.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation Token.</param>
+    /// <returns>Scores.</returns>
+    [HttpGet]
+    public async Task<IActionResult> GetScoresAsync(CancellationToken cancellationToken)
+    {
+        var scores = await this.scoreService.GetScoresAsync(cancellationToken);
+
+        return this.Ok(scores);
+    }
+
+    /// <summary>
+    /// Endpoint to upload the pdf file
+    /// </summary>
+    /// <param name="file">The PDF file.</param>
+    /// <param name="scoreId">The id of the score.</param>
+    /// <param name="partId">The id of the part.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Created.</returns>
+    [HttpPost(UploadFilePath + "{scoreId}/{partId}")]
+    public async Task<IActionResult> UploadFileAsync(
+        IFormFile file,
+        int scoreId,
+        int partId,
+        CancellationToken cancellationToken)
+    {
+        await this.scoreService.AddScoreFileAsync(file, scoreId, partId, cancellationToken);
+
+        return this.Created();
     }
 }

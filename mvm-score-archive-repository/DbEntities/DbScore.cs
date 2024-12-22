@@ -27,4 +27,6 @@ public class DbScore
     public DateTime CreatedAt { get; set; }
 
     public string FilePath { get; set; } = string.Empty;
+
+    public ICollection<DbPart> Parts { get; set; } = new List<DbPart>();
 }

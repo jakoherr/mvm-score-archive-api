@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mvm.Score.Archive.Repository.Context;
 using Mvm.Score.Archive.Repository.DbEntities;
@@ -39,5 +41,31 @@ public class ScoreService : IScoreService
         return dbScore.Id;
     }
 
+    public async Task AddScoreFileAsync(
+        IFormFile file,
+        int scoreId,
+        int partId,
+        CancellationToken cancellationToken)
+    {
+        DbScore dbScore = this.dbContext.Scores
+            .Include(p => p.Parts)
+            .FirstOrDefault(s => s.Id == scoreId)
+            ?? throw new Exception();
 
+        DbPart dbPart = dbScore.Parts.FirstOrDefault(s => s.Id == partId) ?? throw new Exception();
+
+        await this.fileService.RenameAndStoreFileAsync(file, dbScore.FilePath, dbPart.FileName, cancellationToken);
+
+        this.logger.LogDebug("New file was saved.");
+    }
+
+    public async Task<IReadOnlyCollection<OutgoingScoreDto>> GetScoresAsync(CancellationToken cancellationToken)
+    {
+        var dbScores = await this.dbContext.Scores
+            .Include(p => p.Composer)
+            .Include(p => p.Arranger)
+            .ToListAsync(cancellationToken);
+
+        return this.mapper.Map<IReadOnlyCollection<OutgoingScoreDto>>(dbScores);
+    }
 }

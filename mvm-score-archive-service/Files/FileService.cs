@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace Mvm.Score.Archive.Service.Files;
@@ -21,7 +20,7 @@ public class FileService : IFileService
 
     public string CreateScoreFolder(string scoreName)
     {
-        string fileName = this.ConvertScoreName(scoreName);
+        string fileName = ConvertScoreName(scoreName);
 
         string folderPath = Path.Combine(this.fileBasePath, fileName);
 
@@ -34,11 +33,26 @@ public class FileService : IFileService
         return fileName;
     }
 
-    private string ConvertScoreName(string scoreName)
+    public async Task RenameAndStoreFileAsync(
+        IFormFile file,
+        string scorePath,
+        string partName,
+        CancellationToken cancellationToken)
+    {
+        var filePath = Path.Combine(this.fileBasePath, scorePath, partName + ".pdf");
+
+        using var stream = new FileStream(filePath, FileMode.Create);
+
+        await file.CopyToAsync(stream, cancellationToken);
+
+        this.logger.LogDebug("Successfully stored file to: {Path}", filePath);
+    }
+
+    private static string ConvertScoreName(string scoreName)
     {
         string lowerCase = scoreName.ToLower();
-        string sanitized = Regex.Replace(lowerCase, @"[^a-z0-9\s]", "");
 
-        return sanitized.Replace(" ", "-");
+        return Regex.Replace(lowerCase, @"[^a-z0-9\s]", "")
+            .Replace(" ", "-");
     }
 }

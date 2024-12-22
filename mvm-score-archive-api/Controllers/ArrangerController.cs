@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Mvm.Score.Archive.Service.Arranger;
-using Mvm.Score.Archive.Service.Composer;
 
 namespace Mvm.Score.Archive.Api.Controllers;
 
