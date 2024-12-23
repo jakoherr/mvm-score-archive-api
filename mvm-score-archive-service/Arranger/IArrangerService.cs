@@ -8,5 +8,5 @@ public interface IArrangerService
 
     Task<IReadOnlyCollection<OutgoingArrangerDto>> GetArrangerAsync(CancellationToken cancellationToken);
 
-    Task<OutgoingArrangerDto?> GetArrangerByIdAsync(int id, CancellationToken cancellationToken);
+    Task<OutgoingArrangerDto> GetArrangerByIdAsync(int id, CancellationToken cancellationToken);
 }

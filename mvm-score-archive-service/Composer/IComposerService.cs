@@ -6,7 +6,7 @@ public interface IComposerService
 
     Task<IReadOnlyList<OutgoingComposerDto>> GetComposersAsync(CancellationToken cancellationToken);
 
-    Task<OutgoingComposerDto?> GetComposerByIdAsync(int id, CancellationToken cancellationToken);
+    Task<OutgoingComposerDto> GetComposerByIdAsync(int id, CancellationToken cancellationToken);
 
     Task DeleteComposerByIdAsync(int id, CancellationToken cancellationToken);
 }

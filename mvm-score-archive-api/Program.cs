@@ -1,4 +1,5 @@
 using Mvm.Score.Archive.Api.Helpers;
+using Mvm.Score.Archive.Api.Helpers.ErrorHandling;
 using Mvm.Score.Archive.Repository;
 using Mvm.Score.Archive.Service;
 using Serilog;
@@ -32,7 +33,7 @@ try
     builder.Services.AddSwagger();
 
     builder.Services.AddServices(builder.Configuration);
-    builder.Services.AddProblemDetails();
+    builder.Services.ConfigureProblemDetails();
 
     var app = builder.Build();
 
@@ -48,6 +49,8 @@ try
     app.Services.RunMigrations();
 
     app.Logger.LogInformation("Application started");
+
+    app.UseExceptionHandler();
     app.Run();
 }
 catch (Exception ex)

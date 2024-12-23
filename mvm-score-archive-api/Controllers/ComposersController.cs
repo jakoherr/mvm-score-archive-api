@@ -41,7 +41,7 @@ public class ComposersController : ApiControllerBase
     {
         var composers = await this.composerService.GetComposersAsync(cancellationToken);
 
-        return !composers.Any() ? this.NotFound() : this.Ok(composers);
+        return this.Ok(composers);
     }
 
     /// <summary>
@@ -55,9 +55,9 @@ public class ComposersController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetComposerAsync(int id, CancellationToken cancellationToken)
     {
-        var composers = await this.composerService.GetComposerByIdAsync(id, cancellationToken);
+        var composer = await this.composerService.GetComposerByIdAsync(id, cancellationToken);
 
-        return composers is null ? this.NotFound() : this.Ok(composers);
+        return this.Ok(composer);
     }
 
     /// <summary>

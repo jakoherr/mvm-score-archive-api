@@ -21,7 +21,7 @@ services:
   database:
     image: postgres:latest
     container_name: postgres-dev
-    restart: always
+    # restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

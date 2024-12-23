@@ -42,9 +42,7 @@ public class ArrangerController : ApiControllerBase
     {
         var arrangers = await this.arrangerService.GetArrangerAsync(cancellationToken);
 
-        return !arrangers.Any()
-            ? this.NotFound()
-            : this.Ok(arrangers);
+        return this.Ok(arrangers);
     }
 
     /// <summary>
@@ -60,9 +58,7 @@ public class ArrangerController : ApiControllerBase
     {
         var arranger = await this.arrangerService.GetArrangerByIdAsync(id, cancellationToken);
 
-        return arranger is null
-            ? this.NotFound()
-            : this.Ok(arranger);
+        return this.Ok(arranger);
     }
 
     /// <summary>
