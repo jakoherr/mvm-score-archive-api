@@ -7,7 +7,6 @@ namespace Mvm.Score.Archive.Api.Controllers;
 public class ScoreController : ApiControllerBase
 {
     private readonly IScoreService scoreService;
-    private const string UploadFilePath = "/upload";
 
     public ScoreController(
         IScoreService scoreService)
@@ -50,7 +49,7 @@ public class ScoreController : ApiControllerBase
     /// <param name="partId">The id of the part.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Created.</returns>
-    [HttpPost(UploadFilePath + "{scoreId}/{partId}")]
+    [HttpPost("upload/{scoreId}/{partId}")]
     public async Task<IActionResult> UploadFileAsync(
         IFormFile file,
         int scoreId,
