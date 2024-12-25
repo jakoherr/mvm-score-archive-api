@@ -16,6 +16,6 @@ public class DbPart
 
     public string FileName
     {
-        get { return $"{this.Instrument}_{this.Part ?? 0}_{this.Tuning.ToString()}"; }
+        get { return $"{this.Instrument}_{this.Part ?? 0}_{this.Tuning.ToString()}.pdf"; }
     }
 }

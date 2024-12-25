@@ -60,4 +60,22 @@ public class ScoreController : ApiControllerBase
 
         return this.Created();
     }
+
+    /// <summary>
+    /// Gets a PDF file for a provided score and part.
+    /// </summary>
+    /// <param name="scoreId">The id of the score.</param>
+    /// <param name="partId">The id of the part.</param>
+    /// <param name="cancellationToken">CancellationToken.</param>
+    /// <returns>The PDF file of the part.</returns>
+    [HttpGet("file/{scoreId}/{partId}")]
+    public async Task<IActionResult> GetFileByIdAsync(
+        int scoreId,
+        int partId,
+        CancellationToken cancellationToken)
+    {
+        var fileStream = await this.scoreService.ReadSingleScoreFileAsync(scoreId, partId, cancellationToken);
+
+        return this.File(fileStream.Stream, "application/pdf", fileStream.FileName);
+    }
 }

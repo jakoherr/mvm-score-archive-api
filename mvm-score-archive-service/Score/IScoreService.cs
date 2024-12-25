@@ -14,4 +14,9 @@ public interface IScoreService
         CancellationToken cancellationToken);
 
     Task<IReadOnlyCollection<OutgoingScoreDto>> GetScoresAsync(CancellationToken cancellationToken);
+
+    Task<StreamFile> ReadSingleScoreFileAsync(
+        int scoreId,
+        int partId,
+        CancellationToken cancellationToken);
 }

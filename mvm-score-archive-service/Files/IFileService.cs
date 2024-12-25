@@ -11,4 +11,8 @@ public interface IFileService
         string scorePath,
         string partName,
         CancellationToken cancellationToken);
+
+    Task<Stream> ReadFileFromDiskAsync(
+        string filePath,
+        CancellationToken cancellationToken);
 }

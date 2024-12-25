@@ -39,13 +39,21 @@ public class FileService : IFileService
         string partName,
         CancellationToken cancellationToken)
     {
-        var filePath = Path.Combine(this.fileBasePath, scorePath, partName + ".pdf");
+        var filePath = Path.Combine(this.fileBasePath, scorePath, partName);
 
         using var stream = new FileStream(filePath, FileMode.Create);
 
         await file.CopyToAsync(stream, cancellationToken);
 
         this.logger.LogDebug("Successfully stored file to: {Path}", filePath);
+    }
+
+    public async Task<Stream> ReadFileFromDiskAsync(
+        string filePath,
+        CancellationToken cancellationToken)
+    {
+        string fullPath = Path.Combine(this.fileBasePath, filePath);
+        return new MemoryStream(await File.ReadAllBytesAsync(fullPath, cancellationToken));
     }
 
     private static string ConvertScoreName(string scoreName)

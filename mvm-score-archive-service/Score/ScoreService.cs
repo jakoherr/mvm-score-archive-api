@@ -35,7 +35,8 @@ public class ScoreService : IScoreService
         this.dbContext.Scores.Add(dbScore);
         await this.dbContext.SaveChangesAsync(cancellationToken);
 
-        dbScore.FilePath = this.fileService.CreateScoreFolder(dbScore.Title);
+        dbScore.FilePath = this.fileService.CreateScoreFolder($"{dbScore.Title} {dbScore.Id}");
+        await this.dbContext.SaveChangesAsync(cancellationToken);
 
         this.logger.LogInformation("New score added: {@Score}", dbScore);
 
@@ -51,13 +52,35 @@ public class ScoreService : IScoreService
         DbScore dbScore = this.dbContext.Scores
             .Include(p => p.Parts)
             .FirstOrDefault(s => s.Id == scoreId)
-            ?? throw new Exception();
+            ?? throw new NotFoundException("Score cannot be found.", $"The score with id {scoreId} cannot be found in the database.");
 
-        DbPart dbPart = dbScore.Parts.FirstOrDefault(s => s.Id == partId) ?? throw new Exception();
+        DbPart dbPart = this.dbContext.Parts.FirstOrDefault(s => s.Id == partId)
+            ?? throw new NotFoundException("Part cannot be found.", $"The part with id {partId} cannot be found in the database.");
+        dbScore.Parts.Add(dbPart);
 
         await this.fileService.RenameAndStoreFileAsync(file, dbScore.FilePath, dbPart.FileName, cancellationToken);
 
+        await this.dbContext.SaveChangesAsync(cancellationToken);
+
         this.logger.LogDebug("New file was saved.");
+    }
+
+    public async Task<StreamFile> ReadSingleScoreFileAsync(
+        int scoreId,
+        int partId,
+        CancellationToken cancellationToken)
+    {
+        DbScore dbScore = this.dbContext.Scores
+            .Include(p => p.Parts)
+            .FirstOrDefault(s => s.Id == scoreId)
+            ?? throw new NotFoundException("Score cannot be found.", $"The score with id {scoreId} cannot be found in the database.");
+
+        DbPart dbPart = dbScore.Parts.FirstOrDefault(p => p.Id == partId)
+            ?? throw new NotFoundException("Part cannot be found.", $"The part with id {partId} cannot be found in score {scoreId}.");
+
+        var stream = await this.fileService.ReadFileFromDiskAsync(Path.Combine(dbScore.FilePath, dbPart.FileName), cancellationToken);
+
+        return new StreamFile(dbPart.FileName, stream);
     }
 
     public async Task<IReadOnlyCollection<OutgoingScoreDto>> GetScoresAsync(CancellationToken cancellationToken)
