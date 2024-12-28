@@ -21,9 +21,11 @@ public class PartController : ApiControllerBase
     [HttpGet]
     public async Task<IActionResult> GetPartsAsync(CancellationToken cancellationToken)
     {
-        var parts = await this.partsService.GetPartsAsync(cancellationToken);
+        var result = await this.partsService.GetPartsAsync(cancellationToken);
 
-        return this.Ok(parts);
+        return result.IsSuccess
+            ? this.Ok(result.Value)
+            : this.ReturnProblemDetail(result.Error);
     }
 
     /// <summary>

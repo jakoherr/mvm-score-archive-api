@@ -36,9 +36,11 @@ public class ScoreController : ApiControllerBase
     [HttpGet]
     public async Task<IActionResult> GetScoresAsync(CancellationToken cancellationToken)
     {
-        var scores = await this.scoreService.GetScoresAsync(cancellationToken);
+        var result = await this.scoreService.GetScoresAsync(cancellationToken);
 
-        return this.Ok(scores);
+        return result.IsSuccess
+            ? this.Ok(result.Value)
+            : this.ReturnProblemDetail(result.Error);
     }
 
     /// <summary>
@@ -56,9 +58,11 @@ public class ScoreController : ApiControllerBase
         int partId,
         CancellationToken cancellationToken)
     {
-        await this.scoreService.AddScoreFileAsync(file, scoreId, partId, cancellationToken);
+        var result = await this.scoreService.AddScoreFileAsync(file, scoreId, partId, cancellationToken);
 
-        return this.Created();
+        return result.IsSuccess
+            ? this.Created()
+            : this.ReturnProblemDetail(result.Error);
     }
 
     /// <summary>
@@ -74,8 +78,10 @@ public class ScoreController : ApiControllerBase
         int partId,
         CancellationToken cancellationToken)
     {
-        var fileStream = await this.scoreService.ReadSingleScoreFileAsync(scoreId, partId, cancellationToken);
+        var result = await this.scoreService.ReadSingleScoreFileAsync(scoreId, partId, cancellationToken);
 
-        return this.File(fileStream.Stream, "application/pdf", fileStream.FileName);
+        return result.IsSuccess
+            ? this.File(result.Value.Stream, "application/pdf", result.Value.FileName)
+            : this.ReturnProblemDetail(result.Error);
     }
 }

@@ -40,9 +40,11 @@ public class ArrangerController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetArrangersAsync(CancellationToken cancellationToken)
     {
-        var arrangers = await this.arrangerService.GetArrangerAsync(cancellationToken);
+        var result = await this.arrangerService.GetArrangerAsync(cancellationToken);
 
-        return this.Ok(arrangers);
+        return result.IsSuccess
+            ? this.Ok(result.Value)
+            : this.ReturnProblemDetail(result.Error);
     }
 
     /// <summary>
@@ -56,9 +58,11 @@ public class ArrangerController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetArrangerByIdAsync(int id, CancellationToken cancellationToken)
     {
-        var arranger = await this.arrangerService.GetArrangerByIdAsync(id, cancellationToken);
+        var result = await this.arrangerService.GetArrangerByIdAsync(id, cancellationToken);
 
-        return this.Ok(arranger);
+        return result.IsSuccess
+            ? this.Ok(result.Value)
+            : this.ReturnProblemDetail(result.Error);
     }
 
     /// <summary>
@@ -69,8 +73,10 @@ public class ArrangerController : ApiControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteArrangerByIdAsync(int id, CancellationToken cancellationToken)
     {
-        await this.arrangerService.DeleteArrangerByIdAsync(id, cancellationToken);
+        var result = await this.arrangerService.DeleteArrangerByIdAsync(id, cancellationToken);
 
-        return this.NoContent();
+        return result.IsSuccess
+            ? this.NoContent()
+            : this.ReturnProblemDetail(result.Error);
     }
 }

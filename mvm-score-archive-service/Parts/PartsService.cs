@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mvm.Score.Archive.Repository.Context;
 using Mvm.Score.Archive.Repository.DbEntities;
-using Mvm.Score.Archive.Service.Exceptions;
+using Mvm.Score.Archive.Service.ErrorHandling;
+using Mvm.Score.Archive.Service.ErrorHandling.ErrorDescriptions;
 
 namespace Mvm.Score.Archive.Service.Parts;
 
@@ -23,7 +24,7 @@ public class PartsService : IPartsService
         this.dbContext = dbContext;
     }
 
-    public async Task<IReadOnlyCollection<OutgoingPartDto>> GetPartsAsync(CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyCollection<OutgoingPartDto>>> GetPartsAsync(CancellationToken cancellationToken)
     {
         var dbParts = await this.dbContext.Parts
             .AsNoTracking()
@@ -31,10 +32,11 @@ public class PartsService : IPartsService
 
         if (!dbParts.Any())
         {
-            throw new NotFoundException("No parts found.", "No parts can be found in database.");
+            return Result<IReadOnlyCollection<OutgoingPartDto>>.Failure(PartErrors.NoPartFound);
         }
 
-        return this.mapper.Map<IReadOnlyCollection<OutgoingPartDto>>(dbParts);
+        return Result<IReadOnlyCollection<OutgoingPartDto>>
+            .Success(this.mapper.Map<IReadOnlyCollection<OutgoingPartDto>>(dbParts));
     }
 
     public async Task<int> AddPartAsync(IncommingPartDto incommingPartDto, CancellationToken cancellationToken)

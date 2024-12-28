@@ -1,5 +1,5 @@
-﻿
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Mvm.Score.Archive.Service.ErrorHandling;
 
 namespace Mvm.Score.Archive.Service.Score;
 
@@ -7,16 +7,9 @@ public interface IScoreService
 {
     Task<int> AddScoreAsync(IncomingScoreDto incomingScoreDto, CancellationToken cancellationToken);
 
-    Task AddScoreFileAsync(
-        IFormFile file,
-        int scoreId,
-        int partId,
-        CancellationToken cancellationToken);
+    Task<Result<int>> AddScoreFileAsync(IFormFile file, int scoreId, int partId, CancellationToken cancellationToken);
 
-    Task<IReadOnlyCollection<OutgoingScoreDto>> GetScoresAsync(CancellationToken cancellationToken);
+    Task<Result<IReadOnlyCollection<OutgoingScoreDto>>> GetScoresAsync(CancellationToken cancellationToken);
 
-    Task<StreamFile> ReadSingleScoreFileAsync(
-        int scoreId,
-        int partId,
-        CancellationToken cancellationToken);
+    Task<Result<StreamFile>> ReadSingleScoreFileAsync(int scoreId, int partId, CancellationToken cancellationToken);
 }

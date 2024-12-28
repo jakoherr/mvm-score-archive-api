@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Mvm.Score.Archive.Service.ErrorHandling;
 
 namespace Mvm.Score.Archive.Api.Controllers;
 
@@ -7,4 +8,9 @@ namespace Mvm.Score.Archive.Api.Controllers;
 [Route("[controller]")]
 public class ApiControllerBase : ControllerBase
 {
+    protected IActionResult ReturnProblemDetail(CustomError error) =>
+        this.Problem(
+                detail: error.Description,
+                title: error.Title,
+                statusCode: (int)error.HttpStatusCode);
 }

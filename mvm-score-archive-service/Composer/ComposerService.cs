@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mvm.Score.Archive.Repository.Context;
 using Mvm.Score.Archive.Repository.DbEntities;
-using Mvm.Score.Archive.Service.Exceptions;
+using Mvm.Score.Archive.Service.ErrorHandling;
+using Mvm.Score.Archive.Service.ErrorHandling.ErrorDescriptions;
 
 namespace Mvm.Score.Archive.Service.Composer;
 
@@ -35,7 +36,7 @@ public class ComposerService : IComposerService
         return dbComposer.Id;
     }
 
-    public async Task DeleteComposerByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<Result<int>> DeleteComposerByIdAsync(int id, CancellationToken cancellationToken)
     {
         int deletedComposers = await this.dbContext.Composers
             .Where(c => c.Id == id)
@@ -43,30 +44,38 @@ public class ComposerService : IComposerService
 
         if (deletedComposers == 0)
         {
-            throw new NotFoundException("Composer not found.", $"The composer with id {id} was not found in the database.");
+            return Result<int>.Failure(ComposerErrors.ComposerNotFound(id));
         }
 
         this.logger.LogInformation("The composer with id {Id} has been deleted.", id);
+
+        return Result<int>.Success(deletedComposers);
     }
 
-    public async Task<OutgoingComposerDto> GetComposerByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<Result<OutgoingComposerDto>> GetComposerByIdAsync(int id, CancellationToken cancellationToken)
     {
-        DbComposer dbComposer = await this.dbContext.Composers
-            .FirstOrDefaultAsync(composer => composer.Id == id, cancellationToken)
-            ?? throw new NotFoundException("Composer not found.", $"The composer with id {id} was not found in the database.");
+        DbComposer? dbComposer = await this.dbContext.Composers
+            .FirstOrDefaultAsync(composer => composer.Id == id, cancellationToken);
 
-        return this.mapper.Map<OutgoingComposerDto>(dbComposer);
+        if (dbComposer is null)
+        {
+            return Result<OutgoingComposerDto>.Failure(ComposerErrors.ComposerNotFound(id));
+        }
+
+        return Result<OutgoingComposerDto>
+            .Success(this.mapper.Map<OutgoingComposerDto>(dbComposer));
     }
 
-    public async Task<IReadOnlyList<OutgoingComposerDto>> GetComposersAsync(CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyList<OutgoingComposerDto>>> GetComposersAsync(CancellationToken cancellationToken)
     {
         List<DbComposer> composers = await this.dbContext.Composers.ToListAsync(cancellationToken);
 
         if (!composers.Any())
         {
-            throw new NotFoundException("Composers not found.", "No composers in database");
+            return Result<IReadOnlyList<OutgoingComposerDto>>.Failure(ComposerErrors.NoComposersFound);
         }
 
-        return this.mapper.Map<IReadOnlyList<OutgoingComposerDto>>(composers);
+        return Result<IReadOnlyList<OutgoingComposerDto>>
+            .Success(this.mapper.Map<IReadOnlyList<OutgoingComposerDto>>(composers));
     }
 }

@@ -39,9 +39,11 @@ public class ComposersController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetComposersAsync(CancellationToken cancellationToken)
     {
-        var composers = await this.composerService.GetComposersAsync(cancellationToken);
+        var result = await this.composerService.GetComposersAsync(cancellationToken);
 
-        return this.Ok(composers);
+        return result.IsSuccess
+            ? this.Ok(result.Value)
+            : this.ReturnProblemDetail(result.Error);
     }
 
     /// <summary>
@@ -53,11 +55,13 @@ public class ComposersController : ApiControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(OutgoingComposerDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetComposerAsync(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetComposerByIdAsync(int id, CancellationToken cancellationToken)
     {
-        var composer = await this.composerService.GetComposerByIdAsync(id, cancellationToken);
+        var result = await this.composerService.GetComposerByIdAsync(id, cancellationToken);
 
-        return this.Ok(composer);
+        return result.IsSuccess
+            ? this.Ok(result.Value)
+            : this.ReturnProblemDetail(result.Error);
     }
 
     /// <summary>
@@ -69,9 +73,11 @@ public class ComposersController : ApiControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteComposerById(int id, CancellationToken cancellationToken)
     {
-        await this.composerService.DeleteComposerByIdAsync(id, cancellationToken);
+        var result = await this.composerService.DeleteComposerByIdAsync(id, cancellationToken);
 
-        return this.NoContent();
+        return result.IsSuccess
+            ? this.NoContent()
+            : this.ReturnProblemDetail(result.Error);
     }
 
 }
