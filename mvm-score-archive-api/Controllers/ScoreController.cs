@@ -84,4 +84,21 @@ public class ScoreController : ApiControllerBase
             ? this.File(result.Value.Stream, "application/pdf", result.Value.FileName)
             : this.ReturnProblemDetail(result.Error);
     }
+
+    /// <summary>
+    /// Mergs the parts of a score.
+    /// </summary>
+    /// <param name="scoreId">The id of the score.</param>
+    /// <param name="mergeDicitonary">The dicionary for merging.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The merged pdf.</returns>
+    [HttpPost("file/{scoreId}")]
+    public async Task<IActionResult> GetMergedPdfsAsync(int scoreId, IncomingPartMerge mergeDicitonary, CancellationToken cancellationToken)
+    {
+        var result = await this.scoreService.ReadAllFilesAndMergeAsync(scoreId, mergeDicitonary, cancellationToken);
+
+        return result.IsSuccess
+            ? this.File(result.Value.Stream, "application/pdf", result.Value.FileName)
+            : this.ReturnProblemDetail(result.Error);
+    }
 }

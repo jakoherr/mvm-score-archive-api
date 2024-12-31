@@ -12,4 +12,9 @@ public interface IScoreService
     Task<Result<IReadOnlyCollection<OutgoingScoreDto>>> GetScoresAsync(CancellationToken cancellationToken);
 
     Task<Result<StreamFile>> ReadSingleScoreFileAsync(int scoreId, int partId, CancellationToken cancellationToken);
+
+    Task<Result<StreamFile>> ReadAllFilesAndMergeAsync(
+        int scoreId,
+        IncomingPartMerge partMerge,
+        CancellationToken cancellationToken);
 }

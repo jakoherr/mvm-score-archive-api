@@ -12,4 +12,7 @@ public class PartErrors
 
     public static readonly CustomError NoPartFound = new CustomError(
     "Part.NotFound", "No parts found in database.", HttpStatusCode.NotFound);
+
+    public static readonly CustomError StirlingPdfNotReachable = new CustomError(
+        "StirlingPDF", "Stirling PDF failed.", HttpStatusCode.BadRequest);
 }

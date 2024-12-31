@@ -30,5 +30,12 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IFileService, FileService>();
         services.AddTransient<IScoreService, ScoreService>();
         services.AddTransient<IPartsService, PartsService>();
+
+        services.AddHttpClient(
+            "StrilingPdf",
+            client =>
+            {
+                client.BaseAddress = new Uri(configuration["StirlingPdfUrl"]!);
+            });
     }
 }

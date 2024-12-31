@@ -16,17 +16,20 @@ public class ScoreService : IScoreService
     private readonly IMapper mapper;
     private readonly AppDbContext dbContext;
     private readonly IFileService fileService;
+    private readonly IHttpClientFactory httpClientFactory;
 
     public ScoreService(
         ILogger<ScoreService> logger,
         IMapper mapper,
         AppDbContext dbContext,
-        IFileService fileService)
+        IFileService fileService,
+        IHttpClientFactory httpClientFactory)
     {
         this.logger = logger;
         this.mapper = mapper;
         this.dbContext = dbContext;
         this.fileService = fileService;
+        this.httpClientFactory = httpClientFactory;
     }
 
     public async Task<int> AddScoreAsync(IncomingScoreDto incomingScoreDto, CancellationToken cancellationToken)
@@ -104,6 +107,49 @@ public class ScoreService : IScoreService
 
         return Result<StreamFile>
             .Success(new StreamFile(dbPart.FileName, stream));
+    }
+
+    public async Task<Result<StreamFile>> ReadAllFilesAndMergeAsync(
+        int scoreId,
+        IncomingPartMerge partMerge,
+        CancellationToken cancellationToken)
+    {
+        List<StreamFile> fileStreams = new();
+
+        foreach (var part in partMerge.PartAmounts)
+        {
+            for (int i = 0; i < part.Value; i++)
+            {
+                var streamFileResult = await this.ReadSingleScoreFileAsync(scoreId, part.Key, cancellationToken);
+                if (streamFileResult.IsSuccess)
+                {
+                    fileStreams.Add(streamFileResult.Value);
+                    continue;
+                }
+
+                return Result<StreamFile>.Failure(streamFileResult.Error);
+            }
+        }
+
+        using var httpClient = this.httpClientFactory.CreateClient("StrilingPdf");
+        using var formData = new MultipartFormDataContent();
+
+        foreach (var fileStream in fileStreams)
+        {
+            var fileContent = new StreamContent(fileStream.Stream);
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
+            formData.Add(fileContent, "fileInput", fileStream.FileName);
+        }
+
+        var response = await httpClient.PostAsync("general/merge-pdfs", formData, cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Stream responseBody = await response.Content.ReadAsStreamAsync();
+            return Result<StreamFile>.Success(new StreamFile("test.pdf", responseBody));
+        }
+
+        return Result<StreamFile>.Failure(PartErrors.StirlingPdfNotReachable);
     }
 
     public async Task<Result<IReadOnlyCollection<OutgoingScoreDto>>> GetScoresAsync(CancellationToken cancellationToken)
