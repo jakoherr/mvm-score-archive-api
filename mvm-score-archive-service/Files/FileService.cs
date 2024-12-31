@@ -20,7 +20,7 @@ public class FileService : IFileService
 
     public string CreateScoreFolder(string scoreName)
     {
-        string fileName = ConvertScoreName(scoreName);
+        string fileName = ReplaceSpacesWithHyphens(scoreName);
 
         string folderPath = Path.Combine(this.fileBasePath, fileName);
 
@@ -56,9 +56,9 @@ public class FileService : IFileService
         return new MemoryStream(await File.ReadAllBytesAsync(fullPath, cancellationToken));
     }
 
-    private static string ConvertScoreName(string scoreName)
+    private static string ReplaceSpacesWithHyphens(string inputString)
     {
-        string lowerCase = scoreName.ToLower();
+        string lowerCase = inputString.ToLower();
 
         return Regex.Replace(lowerCase, @"[^a-z0-9\s]", "")
             .Replace(" ", "-");

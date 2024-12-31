@@ -1,4 +1,5 @@
 ﻿using Mvm.Score.Archive.Repository.DbEnums;
+using System.Text.RegularExpressions;
 
 namespace Mvm.Score.Archive.Repository.DbEntities;
 
@@ -16,6 +17,10 @@ public class DbPart
 
     public string FileName
     {
-        get { return $"{this.Instrument}_{this.Part ?? 0}_{this.Tuning.ToString()}.pdf"; }
+        get { return $"{ReplaceSpacesWithHyphens(this.Instrument)}_{this.Part ?? 0}_{this.Tuning.ToString()}.pdf"; }
     }
+
+    private static string ReplaceSpacesWithHyphens(string inputString) =>
+        Regex.Replace(inputString, @"[^a-z0-9A-Z\s]", "")
+            .Replace(" ", "-");
 }

@@ -1,6 +1,6 @@
-version: '3.8'
+name: env-database
 
-services:     
+services:
   postgres:
     image: postgres:latest
     container_name: postgres-development
@@ -8,6 +8,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - /home/data/development/pgdata_dev:/var/lib/postgresql/data
+      - /home/data/development/pgdata_dev_env:/var/lib/postgresql/data
     ports:
       - "5555:5432"
