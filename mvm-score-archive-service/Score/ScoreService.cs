@@ -157,6 +157,7 @@ public class ScoreService : IScoreService
         var dbScores = await this.dbContext.Scores
             .Include(p => p.Composer)
             .Include(p => p.Arranger)
+            .Include(p => p.Parts)
             .ToListAsync(cancellationToken);
 
         if (!dbScores.Any())

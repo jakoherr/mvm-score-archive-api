@@ -17,14 +17,12 @@ try
 
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy(
-            "AllowAll",
-            builder =>
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            });
+        options.AddPolicy("AllowAll", policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
     });
 
     builder.Services.AddFileSettingsConfiguration(builder.Configuration);
@@ -37,12 +35,14 @@ try
 
     var app = builder.Build();
 
-    app.UseCors("AllowAll");
+    app.UseExceptionHandler();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Score API");
     });
+
+    app.UseCors("AllowAll");
 
     app.UseSerilogRequestLogging();
 
@@ -52,8 +52,6 @@ try
     app.Services.RunMigrations();
 
     app.Logger.LogInformation("Application started");
-
-    app.UseExceptionHandler();
     app.Run();
 }
 catch (Exception ex)
