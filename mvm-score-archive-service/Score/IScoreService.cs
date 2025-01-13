@@ -17,4 +17,6 @@ public interface IScoreService
         int scoreId,
         IncomingPartMerge partMerge,
         CancellationToken cancellationToken);
+
+    Task AddRandomScores(int amount, CancellationToken cancellationToken);
 }

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Bogus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mvm.Score.Archive.Repository.Context;
 using Mvm.Score.Archive.Repository.DbEntities;
+using Mvm.Score.Archive.Repository.DbEnums;
 using Mvm.Score.Archive.Service.ErrorHandling;
 using Mvm.Score.Archive.Service.ErrorHandling.ErrorDescriptions;
 using Mvm.Score.Archive.Service.Files;
@@ -45,6 +47,37 @@ public class ScoreService : IScoreService
         this.logger.LogInformation("New score added: {@Score}", dbScore);
 
         return dbScore.Id;
+    }
+
+    public async Task AddRandomScores(int amount, CancellationToken cancellationToken)
+    {
+        var composers = new List<DbComposer> { new()
+        {
+            FirstName = "Alexander",
+            LastName = "Pfluger",
+        }, new()
+              {
+            FirstName = "Franz",
+            LastName = "Watz",
+        } };
+
+        string[] publisher = new[] { "Rundel", "Alpensound", "Hal Leonoard" };
+        string[] genres = new[] { "Marsch", "Polka", "Konzertwerk" };
+
+        var fakerConfig = new Faker<DbScore>()
+            .RuleFor(o => o.Id, 0)
+            .RuleFor(o => o.Title, f => f.Random.Words())
+            .RuleFor(o => o.Subtitle, "")
+            .RuleFor(o => o.ComposerId, f => f.PickRandom(new[] {4,5}))
+            .RuleFor(o => o.Arranger, (DbArranger)null)
+            .RuleFor(o => o.Genre, f => f.PickRandom(genres))
+            .RuleFor(o => o.Publisher, f => f.PickRandom(publisher))
+            .RuleFor(o => o.Orchestra, (f, u) => f.PickRandom(u.Orchestra));
+
+        var dbScores = fakerConfig.Generate(amount);
+
+        this.dbContext.Scores.AddRange(dbScores);
+        await this.dbContext.SaveChangesAsync(cancellationToken);            
     }
 
     public async Task<Result<int>> AddScoreFileAsync(

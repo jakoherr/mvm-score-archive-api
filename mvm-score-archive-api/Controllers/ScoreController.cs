@@ -101,4 +101,12 @@ public class ScoreController : ApiControllerBase
             ? this.File(result.Value.Stream, "application/pdf", result.Value.FileName)
             : this.ReturnProblemDetail(result.Error);
     }
+
+    [HttpGet("fake/{amount}")]
+    public async Task<IActionResult> FakeScoreData(int amount, CancellationToken cancellationToken)
+    {
+        await this.scoreService.AddRandomScores(amount, cancellationToken);
+
+        return this.NoContent();
+    }
 }
