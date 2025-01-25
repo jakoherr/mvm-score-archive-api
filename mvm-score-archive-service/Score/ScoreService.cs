@@ -168,4 +168,21 @@ public class ScoreService : IScoreService
         return Result<IReadOnlyCollection<OutgoingScoreDto>>
             .Success(this.mapper.Map<IReadOnlyCollection<OutgoingScoreDto>>(dbScores));
     }
+
+    public async Task<Result<OutgoingScoreDto>> GetScoreByIdAsync(int scoreId, CancellationToken cancellationToken)
+    {
+        DbScore? dbScore = await this.dbContext.Scores
+            .Include(p => p.Composer)
+            .Include(p => p.Arranger)
+            .Include(p => p.Parts)
+            .FirstOrDefaultAsync(s => s.Id == scoreId, cancellationToken);
+
+        if (dbScore == null)
+        {
+            return Result<OutgoingScoreDto>.Failure(ScoreErrors.ScoreNotFound(scoreId));
+        }
+
+        return Result<OutgoingScoreDto>
+            .Success(this.mapper.Map<OutgoingScoreDto>(dbScore));
+    }
 }

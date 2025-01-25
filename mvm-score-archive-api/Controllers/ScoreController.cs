@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Mvm.Score.Archive.Service.Score;
 
@@ -44,6 +45,22 @@ public class ScoreController : ApiControllerBase
     }
 
     /// <summary>
+    /// Returns a single score by the provided id.
+    /// </summary>
+    /// <param name="id">The id of the score.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The score.</returns>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetScoreByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        var result = await this.scoreService.GetScoreByIdAsync(id, cancellationToken);
+
+        return result.IsSuccess
+            ? this.Ok(result.Value)
+            : this.ReturnProblemDetail(result.Error);
+    }
+
+    /// <summary>
     /// Endpoint to upload the pdf file
     /// </summary>
     /// <param name="file">The PDF file.</param>
@@ -79,9 +96,10 @@ public class ScoreController : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await this.scoreService.ReadSingleScoreFileAsync(scoreId, partId, cancellationToken);
+        this.Response.Headers.Add("Content-Disposition", $"inline; filename={result.Value.FileName}");
 
         return result.IsSuccess
-            ? this.File(result.Value.Stream, "application/pdf", result.Value.FileName)
+            ? this.File(result.Value.Stream, MediaTypeNames.Application.Pdf)
             : this.ReturnProblemDetail(result.Error);
     }
 

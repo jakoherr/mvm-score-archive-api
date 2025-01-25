@@ -6,5 +6,5 @@ public record OutgoingPartDto(
     int id,
     string Instrument,
     int? Part,
-    Tunings Tuning,
-    Clef Clef);
+    string Tuning,
+    string Clef);

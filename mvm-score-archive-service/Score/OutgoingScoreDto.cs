@@ -13,6 +13,6 @@ public record OutgoingScoreDto(
     OutgoingArrangerDto Arranger,
     IReadOnlyCollection<OutgoingPartDto> Parts,
     string Genre,
-    Orchestra Orchestra,
+    string Orchestra,
     string Publisher,
     DateTime CreatedAt);
