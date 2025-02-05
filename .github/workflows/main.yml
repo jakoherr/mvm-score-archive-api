@@ -10,7 +10,7 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -35,10 +35,20 @@ jobs:
       - name: Run tests
         run: dotnet test --configuration Release --no-restore --verbosity normal
 
-      - name: Pack NuGet package
-        run: dotnet pack --configuration Release --output ./packages
+      - name: Create release archive
+        run: |
+          mkdir release
+          cp -r bin/Release/net8.0/* release/
+          tar -czvf myapp-$VERSION.tar.gz -C release .
 
-      - name: Publish NuGet package to GitHub Packages
-        run: dotnet nuget push "./packages/*.nupkg" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
+          body: "Automatisch erstelltes Release für Version ${{ env.VERSION }}"
+          draft: false
+          prerelease: false
+          files: myapp-${{ env.VERSION }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
