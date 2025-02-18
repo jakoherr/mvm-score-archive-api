@@ -43,7 +43,6 @@ try
     });
 
     app.UseCors("AllowAll");
-
     app.UseSerilogRequestLogging();
 
     app.MapControllers();
