@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mvm-score-archive-service",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mvm-score-archive-repository", "mvm-score-archive-repository\mvm-score-archive-repository.csproj", "{F7D0BC40-78D7-44DB-9B7C-8A6F2177C3A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mvm-score-archive-tests", "mvm-score-archive-tests\mvm-score-archive-tests.csproj", "{9BED3096-6C24-4891-B21F-617A11819657}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{F7D0BC40-78D7-44DB-9B7C-8A6F2177C3A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7D0BC40-78D7-44DB-9B7C-8A6F2177C3A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7D0BC40-78D7-44DB-9B7C-8A6F2177C3A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BED3096-6C24-4891-B21F-617A11819657}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BED3096-6C24-4891-B21F-617A11819657}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BED3096-6C24-4891-B21F-617A11819657}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BED3096-6C24-4891-B21F-617A11819657}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
