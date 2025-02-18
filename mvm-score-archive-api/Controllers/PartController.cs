@@ -11,7 +11,6 @@ public class PartController : ApiControllerBase
     public PartController(IPartsService partsService)
     {
         this.partsService = partsService;
-        
     }
 
     /// <summary>
