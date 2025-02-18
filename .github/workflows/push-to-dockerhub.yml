@@ -39,6 +39,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: jakobherrle/mvm-score-archive-api
+          tags: type=semver,pattern={{version}},value=v1.0.0
 
       - name: Build and push Docker image
         id: push
