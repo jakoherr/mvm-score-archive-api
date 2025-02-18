@@ -28,18 +28,31 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
+      - name: Get latest beta tag
+        id: get_latest_tag
+        run: |
+          latest_tag=$(git tag -l "beta-*" | sort -V | tail -n1)
+          if [[ -z "$latest_tag" ]]; then
+            new_tag="beta-1"
+          else
+            latest_number=$(echo "$latest_tag" | grep -oE '[0-9]+$')
+            new_number=$((latest_number + 1))
+            new_tag="beta-$new_number"
+          fi
+          echo "new_tag=$new_tag" >> $GITHUB_ENV
+
+      - name: Create and push new tag
+        run: |
+          git tag "$new_tag"
+          git push origin "$new_tag"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: jakobherrle/mvm-score-archive-api
-          tags: type=semver,pattern={{version}},value=v1.0.0
 
       - name: Build and push Docker image
         id: push
@@ -48,8 +61,19 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.new_tag }}
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.new_tag }}
+          release_name: Release ${{ env.new_tag }}
+          body: "This is an automated pre-release for version ${{ env.new_tag }}."
+          draft: false
+          prerelease: true
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
