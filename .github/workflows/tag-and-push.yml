@@ -41,13 +41,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: jakobherrle/mvm-score-archive-api
-          tags: type=semver,pattern={{raw}}
-
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v6
@@ -55,8 +48,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.taggerDryRun.outputs.new_tag }}
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
