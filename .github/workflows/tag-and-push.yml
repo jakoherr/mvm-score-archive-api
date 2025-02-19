@@ -50,12 +50,12 @@ jobs:
           push: true
           tags: jakobherrle/mvm-score-archive-api:${{ steps.taggerDryRun.outputs.new_tag }}
 
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-name: index.docker.io/jakobherrle/mvm-score-archive-api
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+      # - name: Generate artifact attestation
+      #   uses: actions/attest-build-provenance@v2
+      #   with:
+      #     subject-name: index.docker.io/jakobherrle/mvm-score-archive-api
+      #     subject-digest: ${{ steps.push.outputs.digest }}
+      #     push-to-registry: true
 
       # Create Tag on repo
       - name: Minor version for each merge
