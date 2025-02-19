@@ -67,7 +67,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           PRERELEASE: false
-          DEFAULT_BUMP: github.event.inputs.version_type
+          DEFAULT_BUMP: ${{ github.event.inputs.version_type }}
 
       # Create Release
       - name: Create Release
