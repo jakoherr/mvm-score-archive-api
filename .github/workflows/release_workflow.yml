@@ -31,7 +31,7 @@ jobs:
           WITH_V: true
           DRY_RUN: true
           PRERELEASE: false
-          DEFAULT_BUMP: github.event.inputs.version_type
+          DEFAULT_BUMP: ${{ github.event.inputs.version_type }}
 
       - name: Echo new tag
         run: |
