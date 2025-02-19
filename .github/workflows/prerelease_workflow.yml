@@ -1,4 +1,4 @@
-name: Tag repo, build image, push image, create release
+name: Release workflow
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ jobs:
         with:
           fetch-depth: "0"
 
-      - name: Minor version for each merge
+      - name: Create Tag dry run
         id: taggerDryRun
         uses: anothrNick/github-tag-action@1.71.0
         env:
@@ -28,13 +28,13 @@ jobs:
           DRY_RUN: true
           PRERELEASE: true
 
-      - name: echo new tag
+      - name: Echo new tag
         run: |
           echo "The next tag version will be: ${{ steps.taggerDryRun.outputs.new_tag }}"
-      - name: echo tag
+      - name: Echo tag
         run: |
           echo "The current tag is: ${{ steps.taggerDryRun.outputs.tag }}"
-      - name: echo part
+      - name: Echo part
         run: |
           echo "The version increment was: ${{ steps.taggerDryRun.outputs.part }}"
 
@@ -55,7 +55,7 @@ jobs:
           tags: jakobherrle/${{ env.REPO_NAME }}:${{ steps.taggerDryRun.outputs.new_tag }}
 
       # Create Tag on repo
-      - name: Minor version for each merge
+      - name: Create Tag final
         id: taggerFinal
         uses: anothrNick/github-tag-action@1.71.0
         env:
