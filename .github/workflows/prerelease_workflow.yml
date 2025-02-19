@@ -1,13 +1,10 @@
-name: Release workflow
+name: Pre-Release workflow
 
 on:
   workflow_dispatch:
   push:
     branches:
       - develop
-
-env:
-  REPO_NAME: "mvm-score-archive-api"
 
 jobs:
   tag_build_push_realease:
