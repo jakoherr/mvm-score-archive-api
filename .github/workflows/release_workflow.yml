@@ -57,7 +57,9 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: jakobherrle/${{ vars.REPO_NAME }}:${{ steps.taggerDryRun.outputs.new_tag }}
+          tags: |
+            jakobherrle/${{ vars.REPO_NAME }}:${{ steps.taggerDryRun.outputs.new_tag }}
+            jakobherrle/${{ vars.REPO_NAME }}:latest
 
       # Create Tag on repo
       - name: Create Tag final
