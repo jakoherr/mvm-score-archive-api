@@ -13,12 +13,12 @@ jobs:
       attestations: write
       id-token: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
       - name: Minor version for each merge
         id: taggerDryRun
-        uses: anothrNick/github-tag-action@1.36.0
+        uses: anothrNick/github-tag-action@1.71.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
@@ -33,8 +33,38 @@ jobs:
       - name: echo part
         run: |
           echo "The version increment was: ${{ steps.taggerDryRun.outputs.part }}"
-      # DO MY BUILD HERE
-      # IN CASE OF FAILURE, THE STEP BELOW WILL NOT RUN.
+
+      # Docker build and push
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: jakobherrle/mvm-score-archive-api
+          tags: type=semver,pattern={{raw}}
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: index.docker.io/jakobherrle/mvm-score-archive-api
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+      # END DOCKER BUILD
 
       - name: Minor version for each merge
         id: taggerFinal
@@ -42,3 +72,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
+
+      # Create Release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.taggerDryRun.outputs.new_tag }}
+          release_name: Release ${{ steps.taggerDryRun.outputs.new_tag }}
+          draft: false
+          prerelease: true

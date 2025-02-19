@@ -27,8 +27,7 @@ public class ArrangerController : ApiControllerBase
     {
         int id = await this.arrangerService.AddArrangerAsync(arrangerDto, cancellationToken);
 
-        return this.Created($"{this.HttpContext.Request.GetEncodedUrl()}/{id}", id);
-        
+        return this.Created($"{this.HttpContext.Request.GetEncodedUrl()}/{id}", id);        
     }
 
     /// <summary>
