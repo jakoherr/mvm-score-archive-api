@@ -1,17 +1,16 @@
-name: Auto Tag my Application
+name: Tag repo, build image, push image, create release
+
 on:
   workflow_dispatch:
   push:
     branches:
       - develop
+
 jobs:
-  Patch:
+  tag_build_push_realease:
     runs-on: ubuntu-latest
     permissions:
-      packages: write
       contents: write
-      attestations: write
-      id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,6 +22,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           DRY_RUN: true
+          PRERELEASE: true
 
       - name: echo new tag
         run: |
@@ -56,14 +56,15 @@ jobs:
           subject-name: index.docker.io/jakobherrle/mvm-score-archive-api
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-      # END DOCKER BUILD
 
+      # Create Tag on repo
       - name: Minor version for each merge
         id: taggerFinal
         uses: anothrNick/github-tag-action@1.71.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
+          PRERELEASE: true
 
       # Create Release
       - name: Create Release
