@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: write
-  packages: read
 
 jobs:
   tag_build_push_release:
@@ -50,7 +49,7 @@ jobs:
         with:
           context: .
           build-args: |
-            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN=${{ secrets.NUGET_TOKEN }}
           file: ./Dockerfile
           push: true
           tags: |
