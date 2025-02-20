@@ -26,6 +26,15 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Setup NuGet Authentication
+      run: |
+        dotnet nuget add source \
+          --username $GITHUB_ACTOR \
+          --password ${{ secrets.GITHUB_TOKEN }} \
+          --store-password-in-clear-text \
+          --name github \
+          "https://nuget.pkg.github.com/jakoherr/index.json"
+
       - name: Install dependencies
         run: dotnet restore
 
