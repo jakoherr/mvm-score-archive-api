@@ -47,6 +47,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          build-args: |
+            GITHUB_TOKEN=${{ secrets.NUGET_TOKEN }}
           file: ./Dockerfile
           push: true
           tags: |

@@ -1,8 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
+ARG GITHUB_TOKEN
 WORKDIR /src
 COPY . .
-RUN dotnet restore "mvm-score-archive-api/mvm-score-archive-api.csproj"
+RUN dotnet restore "mvm-score-archive-api/mvm-score-archive-api.csproj" --source "https://nuget.pkg.github.com/jakoherr/index.json" \
+--password $GITHUB_TOKEN
 WORKDIR "/src/mvm-score-archive-api"
 RUN dotnet build "mvm-score-archive-api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
