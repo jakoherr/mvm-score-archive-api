@@ -29,8 +29,8 @@ jobs:
       - name: Setup NuGet Authentication
         run: |
           dotnet nuget add source \
-            --username $GITHUB_ACTOR \
-            --password ${{ secrets.GITHUB_TOKEN }} \
+            --username jakoherr \
+            --password ${{ secrets.NUGET_TOKEN }} \
             --store-password-in-clear-text \
             --name github \
             "https://nuget.pkg.github.com/jakoherr/index.json"
