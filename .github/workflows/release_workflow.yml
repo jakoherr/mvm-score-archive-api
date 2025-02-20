@@ -25,7 +25,7 @@ jobs:
         with:
           fetch-depth: "0"
 
-      - name: Create Tag dry run
+      - name: Create tag - dry run
         id: taggerDryRun
         uses: anothrNick/github-tag-action@1.71.0
         env:
@@ -66,7 +66,7 @@ jobs:
             jakobherrle/${{ vars.REPO_NAME }}:latest
 
       # Create Tag on repo
-      - name: Create Tag final
+      - name: Create Tag - final
         id: taggerFinal
         uses: anothrNick/github-tag-action@1.71.0
         env:
