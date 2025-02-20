@@ -3,8 +3,13 @@ ARG BUILD_CONFIGURATION=Release
 ARG GITHUB_TOKEN
 WORKDIR /src
 COPY . .
-RUN dotnet restore "mvm-score-archive-api/mvm-score-archive-api.csproj" --source "https://nuget.pkg.github.com/jakoherr/index.json" \
---password $GITHUB_TOKEN
+RUN dotnet nuget add source \
+    --username jakoherr \
+    --password $GITHUB_TOKEN \
+    --store-password-in-clear-text \
+    --name github \
+    "https://nuget.pkg.github.com/jakoherr/index.json"
+RUN dotnet restore "mvm-score-archive-api/mvm-score-archive-api.csproj"
 WORKDIR "/src/mvm-score-archive-api"
 RUN dotnet build "mvm-score-archive-api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
