@@ -7,7 +7,7 @@ on:
       - develop
 
 jobs:
-  tag_build_push_realease:
+  tag_build_push_release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -65,7 +65,7 @@ jobs:
       # Create Release
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: comnoco/create-release-action@v2.0.5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
