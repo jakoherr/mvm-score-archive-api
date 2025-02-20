@@ -6,11 +6,13 @@ on:
     branches:
       - develop
 
+permissions:
+  contents: write
+  packages: read
+
 jobs:
   tag_build_push_release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,12 +50,12 @@ jobs:
         with:
           context: .
           build-args: |
-            GITHUB_TOKEN=${{ secrets.NUGET_TOKEN }}
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
           file: ./Dockerfile
           push: true
           tags: |
             jakobherrle/${{ vars.REPO_NAME }}:${{ steps.taggerDryRun.outputs.new_tag }}
-            jakobherrle/${{ vars.REPO_NAME }}:latest-pre
+            jakobherrle/${{ vars.REPO_NAME }}:latest-beta
 
       # Create Tag on repo
       - name: Create Tag final
