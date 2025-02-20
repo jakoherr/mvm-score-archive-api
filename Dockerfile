@@ -1,8 +1,9 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
 ARG APP_NAME=mvm-score-archive-api
 ARG BUILD_CONFIGURATION=Release
 ARG GITHUB_TOKEN
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
 
@@ -12,6 +13,7 @@ RUN dotnet nuget add source \
     --store-password-in-clear-text \
     --name github \
     "https://nuget.pkg.github.com/jakoherr/index.json"
+
 RUN dotnet restore "$APP_NAME/$APP_NAME.csproj"
 WORKDIR "/src/$APP_NAME"
 RUN dotnet build "$APP_NAME.csproj" -c $BUILD_CONFIGURATION -o /app/build
