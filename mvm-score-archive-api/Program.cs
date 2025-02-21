@@ -43,6 +43,17 @@ try
     });
 
     app.UseCors("AllowAll");
+
+    app.Use(async (context, next) =>
+    {
+        if (context.Request.Path.Value is "/favicon.ico")
+        {
+            context.Response.StatusCode = 204;
+            return;
+        }
+        await next();
+    });
+
     app.UseSerilogRequestLogging();
 
     app.MapControllers();
