@@ -26,4 +26,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 EXPOSE 5001
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "$APP_NAME.dll"]
+ENTRYPOINT ["dotnet", "mvm-score-archive-api.dll"]
