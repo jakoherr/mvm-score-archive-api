@@ -40,6 +40,7 @@ try
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Score API");
+        c.RoutePrefix = "api/swagger";
     });
 
     app.UseCors("AllowAll");
