@@ -1,0 +1,16 @@
+name: Deploy workflow dev.jhmoing.de
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-jhmoing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
