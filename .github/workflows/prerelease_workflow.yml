@@ -76,3 +76,23 @@ jobs:
           release_name: Release ${{ steps.taggerDryRun.outputs.new_tag }}
           draft: false
           prerelease: true
+
+  deploy-jhmoing:
+    needs: tag_build_push_release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Run docker pull and up
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd /var/projects/
+            docker compose pull api
+            docker compose up -d
+          EOF
