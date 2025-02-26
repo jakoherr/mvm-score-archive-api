@@ -18,7 +18,7 @@ jobs:
       - name: Run docker pull and up
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /path/to/project
+            cd /var/projects/
             docker compose pull api
             docker compose up -d
           EOF
