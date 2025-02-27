@@ -2,7 +2,7 @@
 
 public enum Orchestra
 {
-    Unkown = 0,
+    Unknown = 0,
 
     Vorstufe = 1,
 

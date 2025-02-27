@@ -21,7 +21,7 @@ namespace Mvm.Score.Archive.Repository.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "clef", new[] { "none", "treble", "bass", "alto" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "orchestra", new[] { "unkown", "vorstufe", "juka", "staka" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "orchestra", new[] { "unknown", "vorstufe", "juka", "staka" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tunings", new[] { "none", "c", "eb", "bb", "f", "a" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
