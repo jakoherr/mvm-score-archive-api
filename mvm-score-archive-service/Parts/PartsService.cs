@@ -28,6 +28,7 @@ public class PartsService : IPartsService
     {
         var dbParts = await this.dbContext.Parts
             .AsNoTracking()
+            .OrderBy(p => p.SortOrder)
             .ToListAsync(cancellationToken);
 
         if (!dbParts.Any())
