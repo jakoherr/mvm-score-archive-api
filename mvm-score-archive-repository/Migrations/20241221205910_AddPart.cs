@@ -75,7 +75,7 @@ namespace Mvm.Score.Archive.Repository.Migrations
             migrationBuilder.AlterDatabase()
                 .Annotation("Npgsql:Enum:orchestra", "unkown,vorstufe,juka,staka")
                 .OldAnnotation("Npgsql:Enum:clef", "none,treble,bass,alto")
-                .OldAnnotation("Npgsql:Enum:orchestra", "unkown,vorstufe,juka,staka")
+                .OldAnnotation("Npgsql:Enum:orchestra", "unknown,vorstufe,juka,staka")
                 .OldAnnotation("Npgsql:Enum:tunings", "none,c,eb,bb,f,a");
         }
     }

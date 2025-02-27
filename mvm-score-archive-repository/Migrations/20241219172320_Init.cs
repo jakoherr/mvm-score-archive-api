@@ -12,7 +12,7 @@ namespace Mvm.Score.Archive.Repository.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:Enum:orchestra", "unkown,vorstufe,juka,staka");
+                .Annotation("Npgsql:Enum:orchestra", "unknown,vorstufe,juka,staka");
 
             migrationBuilder.CreateTable(
                 name: "arranges",
