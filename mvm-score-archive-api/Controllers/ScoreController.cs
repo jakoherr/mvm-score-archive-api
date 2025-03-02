@@ -61,6 +61,22 @@ public class ScoreController : ApiControllerBase
     }
 
     /// <summary>
+    /// Deletes the score from the database and removes all files from the disk.
+    /// </summary>
+    /// <param name="scoreId">The id of the score.</param>
+    /// <param name="cancellationToken">The cancellation Token.</param>
+    /// <returns>The numbers of deletes scores.</returns>
+    [HttpDelete("{scoreId}")]
+    public async Task<IActionResult> DeleteScoreAndFilesByIdAsync(int scoreId, CancellationToken cancellationToken)
+    {
+        var result = await this.scoreService.DeleteScoreAndFilesByIdAsync(scoreId, cancellationToken);
+
+        return result.IsSuccess
+            ? this.Ok(result.Value)
+            : this.ReturnProblemDetail(result.Error);
+    }
+
+    /// <summary>
     /// Endpoint to upload the pdf file
     /// </summary>
     /// <param name="file">The PDF file.</param>
