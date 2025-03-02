@@ -44,7 +44,7 @@ public class FileService : IFileService
             return;
         }
 
-        Directory.Delete(folderPath);
+        Directory.Delete(folderPath, true);
         this.logger.LogDebug("The folder and its files were deleted: {ScorePath}", filePath);
     }
 
