@@ -9,6 +9,8 @@ public interface IScoreService
 
     Task<Result<OutgoingScoreDto>> GetScoreByIdAsync(int scoreId, CancellationToken cancellationToken);
 
+    Task<Result<int>> DeleteScoreAndFilesByIdAsync(int scoreId, CancellationToken cancellationToken);
+
     Task<Result<int>> AddScoreFileAsync(IFormFile file, int scoreId, int partId, CancellationToken cancellationToken);
 
     Task<Result<IReadOnlyCollection<OutgoingScoreDto>>> GetScoresAsync(CancellationToken cancellationToken);

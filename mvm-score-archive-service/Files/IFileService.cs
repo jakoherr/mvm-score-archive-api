@@ -15,4 +15,6 @@ public interface IFileService
     Task<Stream> ReadFileFromDiskAsync(
         string filePath,
         CancellationToken cancellationToken);
+
+    void DeleteFolderAndFiles(string filePath);
 }

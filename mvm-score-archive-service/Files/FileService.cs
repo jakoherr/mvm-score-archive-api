@@ -24,13 +24,28 @@ public class FileService : IFileService
 
         string folderPath = Path.Combine(this.fileBasePath, fileName);
 
-        if (!Directory.Exists(folderPath))
+        if (Directory.Exists(folderPath))
         {
-            Directory.CreateDirectory(folderPath);
-            this.logger.LogDebug("The folder was created: {FolderName}", folderPath);
+            return fileName;
         }
 
+        Directory.CreateDirectory(folderPath);
+        this.logger.LogDebug("The folder was created: {FolderName}", folderPath);
+
         return fileName;
+    }
+
+    public void DeleteFolderAndFiles(string filePath)
+    {
+        string folderPath = Path.Combine(this.fileBasePath, filePath);
+
+        if (!Directory.Exists(folderPath))
+        {
+            return;
+        }
+
+        Directory.Delete(folderPath);
+        this.logger.LogDebug("The folder and its files were deleted: {ScorePath}", filePath);
     }
 
     public async Task RenameAndStoreFileAsync(

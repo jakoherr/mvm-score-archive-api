@@ -47,6 +47,27 @@ public class ScoreService : IScoreService
         return dbScore.Id;
     }
 
+    public async Task<Result<int>> DeleteScoreAndFilesByIdAsync(int scoreId, CancellationToken cancellationToken)
+    {
+        DbScore? dbScore = this.dbContext.Scores
+            .FirstOrDefault(s => s.Id == scoreId);
+
+        if (dbScore is null)
+        {
+            return Result<int>.Failure(ScoreErrors.ScoreNotFound(scoreId));
+        }
+
+        int deletedScores = await this.dbContext.Scores
+            .Where(s => s.Id == scoreId)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        this.fileService.DeleteFolderAndFiles(dbScore.FilePath);
+
+        this.logger.LogInformation("The score with Name {ScoreName} was deleted.", dbScore.Title);
+
+        return Result<int>.Success(deletedScores);
+    }
+
     public async Task<Result<int>> AddScoreFileAsync(
         IFormFile file,
         int scoreId,
