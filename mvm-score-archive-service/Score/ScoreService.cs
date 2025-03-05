@@ -195,7 +195,7 @@ public class ScoreService : IScoreService
         DbScore? dbScore = await this.dbContext.Scores
             .Include(p => p.Composer)
             .Include(p => p.Arranger)
-            .Include(p => p.Parts)
+            .Include(p => p.Parts.OrderBy(part => part.SortOrder))
             .FirstOrDefaultAsync(s => s.Id == scoreId, cancellationToken);
 
         if (dbScore == null)
