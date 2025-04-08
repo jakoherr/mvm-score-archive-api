@@ -39,7 +39,7 @@ try
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Score API");
+        c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "Score API");
     });
 
     app.UseCors("AllowAll");
