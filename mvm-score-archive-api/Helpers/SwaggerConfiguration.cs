@@ -7,16 +7,11 @@ public static class SwaggerConfiguration
     public static void AddSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(
-            c =>
-            {
-                c.SwaggerDoc(
-                    "v1",
-                    new Microsoft.OpenApi.Models.OpenApiInfo
-                    {
-                        Title = "Score API",
-                        Version = "v1",
-                    });
-            });
+        services.AddSwaggerGen(c =>
+        {
+            c.IncludeXmlComments(Path.Combine(
+                AppContext.BaseDirectory,
+                $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+        });
     }
 }
