@@ -14,7 +14,7 @@ public static class SwaggerConfiguration
                     "v1",
                     new Microsoft.OpenApi.Models.OpenApiInfo
                     {
-                        Title = "TODO API",
+                        Title = "Score API",
                         Version = "v1",
                     });
             });
