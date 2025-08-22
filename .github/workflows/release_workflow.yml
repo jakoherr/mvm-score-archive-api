@@ -27,7 +27,7 @@ jobs:
 
       - name: Create tag - dry run
         id: taggerDryRun
-        uses: anothrNick/github-tag-action@1.71.0
+        uses: anothrNick/github-tag-action@1.75.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
@@ -68,7 +68,7 @@ jobs:
       # Create Tag on repo
       - name: Create Tag - final
         id: taggerFinal
-        uses: anothrNick/github-tag-action@1.71.0
+        uses: anothrNick/github-tag-action@1.75.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
