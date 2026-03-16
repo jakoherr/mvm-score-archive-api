@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net.Http.Headers;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -158,7 +159,7 @@ public class ScoreService : IScoreService
         foreach (var fileStream in fileStreams)
         {
             var fileContent = new StreamContent(fileStream.Stream);
-            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
             formData.Add(fileContent, "fileInput", fileStream.FileName);
         }
 
@@ -166,7 +167,7 @@ public class ScoreService : IScoreService
 
         if (response.IsSuccessStatusCode)
         {
-            Stream responseBody = await response.Content.ReadAsStreamAsync();
+            Stream responseBody = await response.Content.ReadAsStreamAsync(cancellationToken);
             return Result<StreamFile>.Success(new StreamFile("test.pdf", responseBody));
         }
 
