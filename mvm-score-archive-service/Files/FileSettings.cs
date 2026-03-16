@@ -2,5 +2,5 @@
 
 public class FileSettings
 {
-    required public string FilesBasePath { get; set; }
+    public required string FilesBasePath { get; set; }
 }

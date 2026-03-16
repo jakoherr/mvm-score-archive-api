@@ -1,5 +1,5 @@
-﻿using Mvm.Score.Archive.Repository.DbEnums;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using Mvm.Score.Archive.Repository.DbEnums;
 
 namespace Mvm.Score.Archive.Repository.DbEntities;
 
@@ -23,6 +23,6 @@ public class DbPart
     }
 
     private static string ReplaceSpacesWithHyphens(string inputString) =>
-        Regex.Replace(inputString, @"[^a-z0-9A-Z\s]", "")
+        Regex.Replace(inputString, @"[^a-z0-9A-Z\s]", string.Empty)
             .Replace(" ", "-");
 }

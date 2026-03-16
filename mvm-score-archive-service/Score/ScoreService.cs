@@ -79,7 +79,6 @@ public class ScoreService : IScoreService
             .Include(p => p.Parts)
             .FirstOrDefault(s => s.Id == scoreId);
 
-
         if (dbScore is null)
         {
             return Result<int>.Failure(ScoreErrors.ScoreNotFound(scoreId));

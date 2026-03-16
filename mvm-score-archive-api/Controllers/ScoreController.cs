@@ -77,7 +77,7 @@ public class ScoreController : ApiControllerBase
     }
 
     /// <summary>
-    /// Endpoint to upload the pdf file
+    /// Endpoint to upload the pdf file.
     /// </summary>
     /// <param name="file">The PDF file.</param>
     /// <param name="scoreId">The id of the score.</param>
@@ -112,7 +112,7 @@ public class ScoreController : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await this.scoreService.ReadSingleScoreFileAsync(scoreId, partId, cancellationToken);
-        this.Response.Headers.Add("Content-Disposition", $"inline; filename={result.Value.FileName}");
+        this.Response.Headers.Append("Content-Disposition", $"inline; filename={result.Value.FileName}");
 
         return result.IsSuccess
             ? this.File(result.Value.Stream, MediaTypeNames.Application.Pdf)

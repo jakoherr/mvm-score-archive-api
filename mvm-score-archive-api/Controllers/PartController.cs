@@ -17,7 +17,7 @@ public class PartController : ApiControllerBase
     /// Gets all parts in database.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns></returns>
+    /// <returns>.</returns>
     [HttpGet]
     public async Task<IActionResult> GetPartsAsync(CancellationToken cancellationToken)
     {
@@ -33,7 +33,7 @@ public class PartController : ApiControllerBase
     /// </summary>
     /// <param name="incommingPartDto">Part.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns></returns>
+    /// <returns>.</returns>
     [HttpPost]
     public async Task<IActionResult> AddPartAsync(IncommingPartDto incommingPartDto, CancellationToken cancellationToken)
     {
