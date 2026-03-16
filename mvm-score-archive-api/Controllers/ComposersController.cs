@@ -51,7 +51,7 @@ public class ComposersController : ApiControllerBase
     /// </summary>
     /// <param name="id">The id of the composer.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The composer</returns>
+    /// <returns>The composer.</returns>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(OutgoingComposerDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -67,7 +67,7 @@ public class ComposersController : ApiControllerBase
     /// <summary>
     /// Deletes a composer by its id.
     /// </summary>
-    /// <param name="id">The id of the composer</param>
+    /// <param name="id">The id of the composer.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpDelete("{id}")]
@@ -79,5 +79,4 @@ public class ComposersController : ApiControllerBase
             ? this.NoContent()
             : this.ReturnProblemDetail(result.Error);
     }
-
 }

@@ -6,4 +6,3 @@ public sealed record CustomError(string Title, string Description, HttpStatusCod
 {
     public static readonly CustomError None = new(string.Empty, string.Empty, HttpStatusCode.InternalServerError);
 }
-

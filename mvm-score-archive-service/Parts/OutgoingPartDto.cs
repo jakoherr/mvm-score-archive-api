@@ -3,7 +3,7 @@
 namespace Mvm.Score.Archive.Service.Parts;
 
 public record OutgoingPartDto(
-    int id,
+    int Id,
     string Instrument,
     int? Part,
     string Tuning,

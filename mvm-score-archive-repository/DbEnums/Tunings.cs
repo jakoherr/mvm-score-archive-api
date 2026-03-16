@@ -7,5 +7,5 @@ public enum Tunings
     Eb,
     Bb,
     F,
-    A
+    A,
 }

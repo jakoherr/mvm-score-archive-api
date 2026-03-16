@@ -10,13 +10,9 @@
     <OutputType>Exe</OutputType>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
-
+	
   <ItemGroup>
-    <AdditionalFiles Remove="C:\Users\jakob.herrle\.nuget\packages\analyzers-lib\1.0.0\build\../content/stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="analyzers-lib" Version="1.0.0">
+    <PackageReference Include="analyzers-lib" Version="1.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

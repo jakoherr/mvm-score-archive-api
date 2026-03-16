@@ -6,13 +6,13 @@ public class DbScore
 {
     public int Id { get; set; }
 
-    required public string Title { get; set; }
+    public required string Title { get; set; }
 
     public string Subtitle { get; set; } = string.Empty;
 
     public int ComposerId { get; set; }
 
-    required public DbComposer Composer { get; set; }
+    public required DbComposer Composer { get; set; }
 
     public int? ArrangerId { get; set; }
 

@@ -52,6 +52,7 @@ try
             context.Response.StatusCode = 204;
             return;
         }
+
         await next();
     });
 

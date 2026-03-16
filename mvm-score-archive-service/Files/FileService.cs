@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Text.RegularExpressions;
 
 namespace Mvm.Score.Archive.Service.Files;
 
@@ -75,7 +75,7 @@ public class FileService : IFileService
     {
         string lowerCase = inputString.ToLower();
 
-        return Regex.Replace(lowerCase, @"[^a-z0-9\s]", "")
+        return Regex.Replace(lowerCase, @"[^a-z0-9\s]", string.Empty)
             .Replace(" ", "-");
     }
 }

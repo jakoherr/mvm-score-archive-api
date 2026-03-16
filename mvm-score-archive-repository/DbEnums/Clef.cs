@@ -5,5 +5,5 @@ public enum Clef
     None,
     Treble,
     Bass,
-    Alto
+    Alto,
 }

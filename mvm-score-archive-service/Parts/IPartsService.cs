@@ -1,5 +1,4 @@
-﻿
-using Mvm.Score.Archive.Service.ErrorHandling;
+﻿using Mvm.Score.Archive.Service.ErrorHandling;
 
 namespace Mvm.Score.Archive.Service.Parts;
 
