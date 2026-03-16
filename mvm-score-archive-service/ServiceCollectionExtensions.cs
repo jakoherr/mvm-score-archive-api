@@ -35,7 +35,8 @@ public static class ServiceCollectionExtensions
             "StrilingPdf",
             client =>
             {
-                client.BaseAddress = new Uri(configuration["StirlingPdfUrl"]!);
+                client.BaseAddress = new Uri(configuration["StirlingPdf:ApiBaseUrl"]!);
+                client.DefaultRequestHeaders.Add("X-API-KEY", configuration["StirlingPdf:ApiKey"]!);
             });
     }
 }
