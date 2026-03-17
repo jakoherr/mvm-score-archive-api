@@ -1,8 +1,10 @@
+using Microsoft.Extensions.Options;
 using Mvm.Score.Archive.Api.Helpers;
 using Mvm.Score.Archive.Api.Helpers.ErrorHandling;
 using Mvm.Score.Archive.Repository;
 using Mvm.Score.Archive.Service;
 using Serilog;
+using static System.Net.WebRequestMethods;
 
 try
 {
@@ -30,10 +32,23 @@ try
     builder.Services.AddControllers();
     builder.Services.AddSwagger();
 
+    // wichtig: Mapping setzen: frontendclient --> client scopes --> dedicated scope --> add mapper --> by configuration --> audience
+    builder.Services.AddAuthentication("Bearer")
+        .AddJwtBearer("Bearer", opt =>
+        {
+            opt.Authority = "http://localhost:8888/realms/musikverein";
+
+            opt.RequireHttpsMetadata = false; // nur lokal
+            opt.Audience = "dotnet-api"; // Client ID deines Backends
+        });
+
     builder.Services.AddServices(builder.Configuration);
     builder.Services.ConfigureProblemDetails();
 
     var app = builder.Build();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     app.UseExceptionHandler();
     app.UseSwagger();
