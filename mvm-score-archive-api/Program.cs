@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Mvm.Score.Archive.Api.Helpers;
 using Mvm.Score.Archive.Api.Helpers.ErrorHandling;
 using Mvm.Score.Archive.Repository;
@@ -30,10 +31,33 @@ try
     builder.Services.AddControllers();
     builder.Services.AddSwagger();
 
+    builder.Services.AddAuthentication(opt =>
+    {
+        opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration["Authorization:Authority"];
+        options.Audience = builder.Configuration["Authorization:Audience"];
+
+        options.RequireHttpsMetadata = true;
+
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+        };
+    });
+
     builder.Services.AddServices(builder.Configuration);
     builder.Services.ConfigureProblemDetails();
 
     var app = builder.Build();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     app.UseExceptionHandler();
     app.UseSwagger();
