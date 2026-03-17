@@ -1,0 +1,25 @@
+services:
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:latest
+    container_name: stirling
+    ports:
+      - "8000:8080"
+    volumes:
+      - /home/data/dev/StirlingPDF/trainingData:/usr/share/tessdata # Required for extra OCR languages
+      - /home/data/dev/StirlingPDF/extraConfigs:/configs
+      - /home/data/dev/StirlingPDF/customFiles:/customFiles/
+      - /home/data/dev/StirlingPDF/logs:/logs/
+      - /home/data/dev/StirlingPDF/pipeline:/pipeline/
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
+      - LANGS=en_GB
+    networks:
+      - archive-network-dev
+
+networks:
+  archive-network-dev:
+    driver: bridge
+
+volumes:
+  app_data:
