@@ -36,10 +36,10 @@ try
     builder.Services.AddAuthentication("Bearer")
         .AddJwtBearer("Bearer", opt =>
         {
-            opt.Authority = "http://localhost:8888/realms/musikverein";
+            opt.Authority = $"{builder.Configuration["Keycloak:AuthUrl"]}/realms/{builder.Configuration["Keycloak:Realm"]}";
 
             opt.RequireHttpsMetadata = false; // nur lokal
-            opt.Audience = "dotnet-api"; // Client ID deines Backends
+            opt.Audience = builder.Configuration["Keycloak:ClientId"]; // Client ID deines Backends
         });
 
     builder.Services.AddServices(builder.Configuration);
