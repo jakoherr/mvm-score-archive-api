@@ -399,3 +399,5 @@ FodyWeavers.xsd
 
 pgdata/
 .idea/*
+.DS_Store
+*/tmp/*
