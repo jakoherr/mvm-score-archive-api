@@ -60,6 +60,10 @@ public sealed class AppDbContext : DbContext
         {
             e.HasKey(e => e.Id);
             e.Ignore(e => e.FileName);
+            e.HasMany<DbPart>()
+                .WithOne()
+                .HasForeignKey(x => x.FallbackPartId)
+                .IsRequired(false);
         });
 
         // enums

@@ -17,6 +17,8 @@ public class DbPart
 
     public int SortOrder { get; set; }
 
+    public int? FallbackPartId { get; set; }
+
     public string FileName
     {
         get { return $"{ReplaceSpacesWithHyphens(this.Instrument)}_{this.Part ?? 0}_{this.Tuning.ToString()}.pdf"; }

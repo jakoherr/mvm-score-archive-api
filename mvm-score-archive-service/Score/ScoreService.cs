@@ -117,17 +117,42 @@ public class ScoreService : IScoreService
             return Result<StreamFile>.Failure(ScoreErrors.ScoreNotFound(scoreId));
         }
 
-        DbPart? dbPart = dbScore.Parts.FirstOrDefault(p => p.Id == partId);
+        DbPart? dbPartInScore = dbScore.Parts.FirstOrDefault(p => p.Id == partId);
 
-        if (dbPart is null)
+        if (dbPartInScore is null)
+        {
+            DbPart? dbPart = this.dbContext.Parts.FirstOrDefault(p => p.Id == partId);
+            if (dbPart is null)
+            {
+                return Result<StreamFile>.Failure(PartErrors.PartNotFound(partId));
+            }
+
+            while (dbPart.FallbackPartId is not null)
+            {
+                if (dbScore.Parts.Select(x => x.Id).Contains(dbPart.FallbackPartId.Value))
+                {
+                    dbPartInScore = dbScore.Parts.First(x => x.Id == dbPart.FallbackPartId.Value);
+                    break;
+                }
+
+                dbPart = this.dbContext.Parts.FirstOrDefault(p => p.Id == dbPart.FallbackPartId);
+
+                if (dbPart is null)
+                {
+                    return Result<StreamFile>.Failure(PartErrors.PartNotFound(partId));
+                }
+            }
+        }
+
+        if (dbPartInScore is null)
         {
             return Result<StreamFile>.Failure(PartErrors.PartInScoreNotFound(partId, scoreId));
         }
 
-        var stream = await this.fileService.ReadFileFromDiskAsync(Path.Combine(dbScore.FilePath, dbPart.FileName), cancellationToken);
+        var stream = await this.fileService.ReadFileFromDiskAsync(Path.Combine(dbScore.FilePath, dbPartInScore.FileName), cancellationToken);
 
         return Result<StreamFile>
-            .Success(new StreamFile(dbPart.FileName, stream));
+            .Success(new StreamFile(dbPartInScore.FileName, stream));
     }
 
     public async Task<Result<StreamFile>> ReadAllFilesAndMergeAsync(
