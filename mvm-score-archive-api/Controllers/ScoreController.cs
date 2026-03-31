@@ -99,6 +99,25 @@ public class ScoreController : ApiControllerBase
     }
 
     /// <summary>
+    /// Deletes a Part of a score in database and the pdf file.
+    /// </summary>
+    /// <param name="scoreId">The id of the score.</param>
+    /// <param name="partId">The id of the part.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>NoContent.</returns>
+    [HttpDelete("{scoreId}/{partId}")]
+    public async Task<IActionResult> DeletePartAndFileAsync(
+        int scoreId,
+        int partId,
+        CancellationToken cancellationToken)
+    {
+        var result = await this.scoreService.DeleteScorePartAsync(scoreId, partId, cancellationToken);
+        return result.IsSuccess
+            ? this.NoContent()
+            : this.ReturnProblemDetail(result.Error);
+    }
+
+    /// <summary>
     /// Gets a PDF file for a provided score and part.
     /// </summary>
     /// <param name="scoreId">The id of the score.</param>

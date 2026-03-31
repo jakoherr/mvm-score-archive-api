@@ -21,4 +21,6 @@ public interface IScoreService
         int scoreId,
         IncomingPartMerge partMerge,
         CancellationToken cancellationToken);
+
+    Task<Result<bool>> DeleteScorePartAsync(int scoreId, int partId, CancellationToken cancellationToken);
 }

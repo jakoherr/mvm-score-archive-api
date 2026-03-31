@@ -17,4 +17,6 @@ public interface IFileService
         CancellationToken cancellationToken);
 
     void DeleteFolderAndFiles(string filePath);
+
+    void DeleteFileByPath(string filePath);
 }

@@ -71,6 +71,13 @@ public class FileService : IFileService
         return new MemoryStream(await File.ReadAllBytesAsync(fullPath, cancellationToken));
     }
 
+    public void DeleteFileByPath(string filePath)
+    {
+        string fullPath = Path.Combine(this.fileBasePath, filePath);
+        this.logger.LogDebug("Try to delete file: {FilePath}", fullPath);
+        File.Delete(fullPath);
+    }
+
     private static string ReplaceSpacesWithHyphens(string inputString)
     {
         string lowerCase = inputString.ToLower();
