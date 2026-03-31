@@ -231,4 +231,31 @@ public class ScoreService : IScoreService
         return Result<OutgoingScoreDto>
             .Success(this.mapper.Map<OutgoingScoreDto>(dbScore));
     }
+
+    public async Task<Result<bool>> DeleteScorePartAsync(int scoreId, int partId, CancellationToken cancellationToken)
+    {
+        var score = await this.dbContext.Scores
+            .Include(s => s.Parts)
+            .FirstOrDefaultAsync(s => s.Id == scoreId, cancellationToken);
+
+        var dbPart = score?.Parts.FirstOrDefault(p => p.Id == partId);
+
+        if (dbPart == null)
+        {
+            return Result<bool>.Failure(PartErrors.PartNotFound(partId));
+        }
+
+        try
+        {
+            this.fileService.DeleteFileByPath(Path.Combine(score!.FilePath, dbPart.FileName));
+        }
+        catch
+        {
+            return Result<bool>.Failure(FileErrors.FileDeleteError);
+        }
+
+        score!.Parts.Remove(dbPart);
+        await this.dbContext.SaveChangesAsync(cancellationToken);
+        return Result<bool>.Success(true);
+    }
 }
