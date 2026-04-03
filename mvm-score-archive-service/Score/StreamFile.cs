@@ -2,11 +2,14 @@
 
 public class StreamFile
 {
-    public StreamFile(string fileName, Stream stream)
+    public StreamFile(string fileName, Stream stream, int? fileOrder = null)
     {
         this.FileName = fileName;
         this.Stream = stream;
+        this.FileOrder = fileOrder;
     }
+
+    public int? FileOrder { get; }
 
     public string FileName { get; }
 
