@@ -152,7 +152,7 @@ public class ScoreService : IScoreService
         var stream = await this.fileService.ReadFileFromDiskAsync(Path.Combine(dbScore.FilePath, dbPartInScore.FileName), cancellationToken);
 
         return Result<StreamFile>
-            .Success(new StreamFile(dbPartInScore.FileName, stream));
+            .Success(new StreamFile(dbPartInScore.FileName, stream, dbPartInScore.SortOrder));
     }
 
     public async Task<Result<StreamFile>> ReadAllFilesAndMergeAsync(
@@ -180,7 +180,7 @@ public class ScoreService : IScoreService
         using var httpClient = this.httpClientFactory.CreateClient("StrilingPdf");
         using var formData = new MultipartFormDataContent();
 
-        foreach (var fileStream in fileStreams)
+        foreach (var fileStream in fileStreams.OrderBy(x => x.FileOrder))
         {
             var fileContent = new StreamContent(fileStream.Stream);
             fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
@@ -189,13 +189,13 @@ public class ScoreService : IScoreService
 
         var response = await httpClient.PostAsync("general/merge-pdfs", formData, cancellationToken);
 
-        if (response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
-            Stream responseBody = await response.Content.ReadAsStreamAsync(cancellationToken);
-            return Result<StreamFile>.Success(new StreamFile("test.pdf", responseBody));
+            return Result<StreamFile>.Failure(PartErrors.StirlingPdfNotReachable);
         }
 
-        return Result<StreamFile>.Failure(PartErrors.StirlingPdfNotReachable);
+        Stream responseBody = await response.Content.ReadAsStreamAsync(cancellationToken);
+        return Result<StreamFile>.Success(new StreamFile("test.pdf", responseBody));
     }
 
     public async Task<Result<IReadOnlyCollection<OutgoingScoreDto>>> GetScoresAsync(CancellationToken cancellationToken)
