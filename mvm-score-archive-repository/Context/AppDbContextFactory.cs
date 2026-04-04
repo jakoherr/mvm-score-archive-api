@@ -9,7 +9,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
         optionsBuilder
-            .UseNpgsql("User ID=postgres;Password=postgres;Server=localhost;Port=5555;Database=mvm-score-archive-api;Pooling=true;")
+            .UseNpgsql("User ID=postgres;Password=postgres;Server=localhost;Port=5432;Database=mvm-score-archive-api;Pooling=true;")
         .UseSnakeCaseNamingConvention();
 
         return new AppDbContext(optionsBuilder.Options);

@@ -5,6 +5,7 @@ using Mvm.Score.Archive.Repository.Context;
 using Mvm.Score.Archive.Service.Arranger;
 using Mvm.Score.Archive.Service.Composer;
 using Mvm.Score.Archive.Service.Files;
+using Mvm.Score.Archive.Service.PartFilter;
 using Mvm.Score.Archive.Service.Parts;
 using Mvm.Score.Archive.Service.PdfGenerator;
 using Mvm.Score.Archive.Service.Score;
@@ -31,6 +32,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IFileService, FileService>();
         services.AddTransient<IScoreService, ScoreService>();
         services.AddTransient<IPartsService, PartsService>();
+        services.AddTransient<IPartFilterService, PartFilterService>();
 
         services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
 
