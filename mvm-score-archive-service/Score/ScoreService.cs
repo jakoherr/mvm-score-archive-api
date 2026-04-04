@@ -8,6 +8,8 @@ using Mvm.Score.Archive.Repository.DbEntities;
 using Mvm.Score.Archive.Service.ErrorHandling;
 using Mvm.Score.Archive.Service.ErrorHandling.ErrorDescriptions;
 using Mvm.Score.Archive.Service.Files;
+using Mvm.Score.Archive.Service.Parts;
+using Mvm.Score.Archive.Service.PdfGenerator;
 
 namespace Mvm.Score.Archive.Service.Score;
 
@@ -18,19 +20,22 @@ public class ScoreService : IScoreService
     private readonly AppDbContext dbContext;
     private readonly IFileService fileService;
     private readonly IHttpClientFactory httpClientFactory;
+    private readonly IPdfGeneratorService pdfGeneratorService;
 
     public ScoreService(
         ILogger<ScoreService> logger,
         IMapper mapper,
         AppDbContext dbContext,
         IFileService fileService,
-        IHttpClientFactory httpClientFactory)
+        IHttpClientFactory httpClientFactory,
+        IPdfGeneratorService pdfGeneratorService)
     {
         this.logger = logger;
         this.mapper = mapper;
         this.dbContext = dbContext;
         this.fileService = fileService;
         this.httpClientFactory = httpClientFactory;
+        this.pdfGeneratorService = pdfGeneratorService;
     }
 
     public async Task<int> AddScoreAsync(IncomingScoreDto incomingScoreDto, CancellationToken cancellationToken)
@@ -118,6 +123,7 @@ public class ScoreService : IScoreService
         }
 
         DbPart? dbPartInScore = dbScore.Parts.FirstOrDefault(p => p.Id == partId);
+        Part originPart = new();
 
         if (dbPartInScore is null)
         {
@@ -126,6 +132,8 @@ public class ScoreService : IScoreService
             {
                 return Result<StreamFile>.Failure(PartErrors.PartNotFound(partId));
             }
+
+            originPart = this.mapper.Map<Part>(dbPart);
 
             while (dbPart.FallbackPartId is not null)
             {
@@ -146,16 +154,17 @@ public class ScoreService : IScoreService
 
         if (dbPartInScore is null)
         {
-            return Result<StreamFile>.Failure(PartErrors.PartInScoreNotFound(partId, scoreId));
+            var file = this.pdfGeneratorService.GeneratePartPdfAsStream(originPart);
+            return Result<StreamFile>.Success(new StreamFile(file, originPart));
         }
 
         var stream = await this.fileService.ReadFileFromDiskAsync(Path.Combine(dbScore.FilePath, dbPartInScore.FileName), cancellationToken);
 
         return Result<StreamFile>
-            .Success(new StreamFile(dbPartInScore.FileName, stream, dbPartInScore.SortOrder));
+            .Success(new StreamFile(stream, this.mapper.Map<Part>(dbPartInScore)));
     }
 
-    public async Task<Result<StreamFile>> ReadAllFilesAndMergeAsync(
+    public async Task<Result<Stream>> ReadAllFilesAndMergeAsync(
         int scoreId,
         IncomingPartMerge partMerge,
         CancellationToken cancellationToken)
@@ -173,29 +182,19 @@ public class ScoreService : IScoreService
                     continue;
                 }
 
-                return Result<StreamFile>.Failure(streamFileResult.Error);
+                return Result<Stream>.Failure(streamFileResult.Error);
             }
         }
 
-        using var httpClient = this.httpClientFactory.CreateClient("StrilingPdf");
-        using var formData = new MultipartFormDataContent();
-
-        foreach (var fileStream in fileStreams.OrderBy(x => x.FileOrder))
-        {
-            var fileContent = new StreamContent(fileStream.Stream);
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
-            formData.Add(fileContent, "fileInput", fileStream.FileName);
-        }
-
-        var response = await httpClient.PostAsync("general/merge-pdfs", formData, cancellationToken);
+        var response = await this.InvokeStirlingPdf(cancellationToken, fileStreams);
 
         if (!response.IsSuccessStatusCode)
         {
-            return Result<StreamFile>.Failure(PartErrors.StirlingPdfNotReachable);
+            return Result<Stream>.Failure(PartErrors.StirlingPdfNotReachable);
         }
 
         Stream responseBody = await response.Content.ReadAsStreamAsync(cancellationToken);
-        return Result<StreamFile>.Success(new StreamFile("test.pdf", responseBody));
+        return Result<Stream>.Success(responseBody);
     }
 
     public async Task<Result<IReadOnlyCollection<OutgoingScoreDto>>> GetScoresAsync(CancellationToken cancellationToken)
@@ -257,5 +256,21 @@ public class ScoreService : IScoreService
         score!.Parts.Remove(dbPart);
         await this.dbContext.SaveChangesAsync(cancellationToken);
         return Result<bool>.Success(true);
+    }
+
+    private async Task<HttpResponseMessage> InvokeStirlingPdf(CancellationToken cancellationToken, List<StreamFile> fileStreams)
+    {
+        using var httpClient = this.httpClientFactory.CreateClient("StrilingPdf");
+        using var formData = new MultipartFormDataContent();
+
+        foreach (var fileStream in fileStreams.OrderBy(x => x.PartInformation.SortOrder))
+        {
+            var fileContent = new StreamContent(fileStream.Stream);
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+            formData.Add(fileContent, "fileInput", fileStream.PartInformation.FileName);
+        }
+
+        var response = await httpClient.PostAsync("general/merge-pdfs", formData, cancellationToken);
+        return response;
     }
 }

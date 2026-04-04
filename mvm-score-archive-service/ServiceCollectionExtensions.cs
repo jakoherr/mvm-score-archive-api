@@ -6,6 +6,7 @@ using Mvm.Score.Archive.Service.Arranger;
 using Mvm.Score.Archive.Service.Composer;
 using Mvm.Score.Archive.Service.Files;
 using Mvm.Score.Archive.Service.Parts;
+using Mvm.Score.Archive.Service.PdfGenerator;
 using Mvm.Score.Archive.Service.Score;
 
 namespace Mvm.Score.Archive.Service;
@@ -30,6 +31,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IFileService, FileService>();
         services.AddTransient<IScoreService, ScoreService>();
         services.AddTransient<IPartsService, PartsService>();
+
+        services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
 
         services.AddHttpClient(
             "StrilingPdf",

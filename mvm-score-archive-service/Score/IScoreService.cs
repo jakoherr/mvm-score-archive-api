@@ -17,7 +17,7 @@ public interface IScoreService
 
     Task<Result<StreamFile>> ReadSingleScoreFileAsync(int scoreId, int partId, CancellationToken cancellationToken);
 
-    Task<Result<StreamFile>> ReadAllFilesAndMergeAsync(
+    Task<Result<Stream>> ReadAllFilesAndMergeAsync(
         int scoreId,
         IncomingPartMerge partMerge,
         CancellationToken cancellationToken);
