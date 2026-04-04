@@ -26,5 +26,8 @@ public class ServiceAutomapperConfiguration : Profile
         this.CreateMap<IncommingPartDto, DbPart>();
 
         this.CreateMap<DbPart, OutgoingPartDto>();
+
+        this.CreateMap<DbPart, Part>()
+            .ForMember(x => x.PartNumber, opt => opt.MapFrom(x => x.Part));
     }
 }

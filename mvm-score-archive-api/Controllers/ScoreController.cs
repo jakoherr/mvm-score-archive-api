@@ -131,7 +131,7 @@ public class ScoreController : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await this.scoreService.ReadSingleScoreFileAsync(scoreId, partId, cancellationToken);
-        this.Response.Headers.Append("Content-Disposition", $"inline; filename={result.Value.FileName}");
+        this.Response.Headers.Append("Content-Disposition", $"inline; filename={result.Value.PartInformation.FileName}");
 
         return result.IsSuccess
             ? this.File(result.Value.Stream, MediaTypeNames.Application.Pdf)
@@ -151,7 +151,7 @@ public class ScoreController : ApiControllerBase
         var result = await this.scoreService.ReadAllFilesAndMergeAsync(scoreId, mergeDicitonary, cancellationToken);
 
         return result.IsSuccess
-            ? this.File(result.Value.Stream, "application/pdf", result.Value.FileName)
+            ? this.File(result.Value, "application/pdf")
             : this.ReturnProblemDetail(result.Error);
     }
 }

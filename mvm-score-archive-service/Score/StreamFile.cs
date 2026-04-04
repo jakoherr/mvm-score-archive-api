@@ -1,17 +1,16 @@
-﻿namespace Mvm.Score.Archive.Service.Score;
+﻿using Mvm.Score.Archive.Service.Parts;
+
+namespace Mvm.Score.Archive.Service.Score;
 
 public class StreamFile
 {
-    public StreamFile(string fileName, Stream stream, int? fileOrder = null)
+    public StreamFile(Stream stream, Part partInformation)
     {
-        this.FileName = fileName;
         this.Stream = stream;
-        this.FileOrder = fileOrder;
+        this.PartInformation = partInformation;
     }
 
-    public int? FileOrder { get; }
-
-    public string FileName { get; }
+    public Part PartInformation { get; }
 
     public Stream Stream { get; }
 }
