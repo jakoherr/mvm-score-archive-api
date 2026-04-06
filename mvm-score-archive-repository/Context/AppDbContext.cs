@@ -23,6 +23,10 @@ public sealed class AppDbContext : DbContext
 
     public DbSet<DbPart> Parts => this.Set<DbPart>();
 
+    public DbSet<DbPartFilter> PartFilters => this.Set<DbPartFilter>();
+
+    public DbSet<DbPartFilterItem> PartFilterItems => this.Set<DbPartFilterItem>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -64,6 +68,23 @@ public sealed class AppDbContext : DbContext
                 .WithOne()
                 .HasForeignKey(x => x.FallbackPartId)
                 .IsRequired(false);
+        });
+
+        modelBuilder.Entity<DbPartFilter>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.HasMany(x => x.PartFilterItems)
+                .WithOne()
+                .HasForeignKey(k => k.PartFilterId);
+            e.HasIndex(i => i.CreatedByUserId);
+        });
+
+        modelBuilder.Entity<DbPartFilterItem>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.HasOne(x => x.Part)
+                .WithMany()
+                .HasForeignKey(x => x.PartId);
         });
 
         // enums
