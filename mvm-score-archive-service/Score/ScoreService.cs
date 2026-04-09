@@ -176,13 +176,12 @@ public class ScoreService : IScoreService
             for (int i = 0; i < part.Value; i++)
             {
                 var streamFileResult = await this.ReadSingleScoreFileAsync(scoreId, part.Key, cancellationToken);
-                if (streamFileResult.IsSuccess)
+                if (!streamFileResult.IsSuccess)
                 {
-                    fileStreams.Add(streamFileResult.Value);
-                    continue;
+                    return Result<Stream>.Failure(streamFileResult.Error);
                 }
 
-                return Result<Stream>.Failure(streamFileResult.Error);
+                fileStreams.Add(streamFileResult.Value);
             }
         }
 
@@ -195,6 +194,18 @@ public class ScoreService : IScoreService
 
         Stream responseBody = await response.Content.ReadAsStreamAsync(cancellationToken);
         return Result<Stream>.Success(responseBody);
+    }
+
+    public async Task<Result<Stream>> MergeFilesByFilterIdAsync(int scoreId, int filterId, CancellationToken cancellationToken)
+    {
+        var partMerge = await this.dbContext.PartFilterItems
+            .Where(x => x.PartFilterId == filterId)
+            .ToDictionaryAsync(
+                k => k.PartId,
+                v => v.Quantity,
+                cancellationToken);
+
+        return await this.ReadAllFilesAndMergeAsync(scoreId, new IncomingPartMerge(partMerge), cancellationToken);
     }
 
     public async Task<Result<IReadOnlyCollection<OutgoingScoreDto>>> GetScoresAsync(CancellationToken cancellationToken)

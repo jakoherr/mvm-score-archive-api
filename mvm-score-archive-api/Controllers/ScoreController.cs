@@ -154,4 +154,21 @@ public class ScoreController : ApiControllerBase
             ? this.File(result.Value, "application/pdf")
             : this.ReturnProblemDetail(result.Error);
     }
+
+    /// <summary>
+    /// Merges the pdfs based on a filter.
+    /// </summary>
+    /// <param name="scoreId">The id of the score.</param>
+    /// <param name="filterId">The id of the part filter.</param>
+    /// <param name="cancellationToken">Cancellation Token.</param>
+    /// <returns>The file.</returns>
+    [HttpGet("file/filtered/{scoreId:int}/{filterId:int}")]
+    public async Task<IActionResult> GetMergedPdfByPartFilterIdAsync(int scoreId, int filterId, CancellationToken cancellationToken)
+    {
+        var result = await this.scoreService.MergeFilesByFilterIdAsync(scoreId, filterId, cancellationToken);
+
+        return result.IsSuccess
+            ? this.File(result.Value, "application/pdf")
+            : this.ReturnProblemDetail(result.Error);
+    }
 }

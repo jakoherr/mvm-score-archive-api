@@ -22,5 +22,7 @@ public interface IScoreService
         IncomingPartMerge partMerge,
         CancellationToken cancellationToken);
 
+    Task<Result<Stream>> MergeFilesByFilterIdAsync(int scoreId, int filterId, CancellationToken cancellationToken);
+
     Task<Result<bool>> DeleteScorePartAsync(int scoreId, int partId, CancellationToken cancellationToken);
 }
